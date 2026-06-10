@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -29,9 +29,9 @@ class TokenH;
 
 class ParseTree final {
     using ptr_stat_v = std::vector<std::unique_ptr<IPTStatementNode>>;
-    using ptr_stat   = std::unique_ptr<IPTStatementNode>;
+    using ptr_stat = std::unique_ptr<IPTStatementNode>;
     using ptr_expr_v = std::vector<std::unique_ptr<IPTExpressionNode>>;
-    using ptr_expr   = std::unique_ptr<IPTExpressionNode>;
+    using ptr_expr = std::unique_ptr<IPTExpressionNode>;
 
 public:
     ParseTree() = default;

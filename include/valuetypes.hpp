@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -50,9 +50,9 @@ public:
     virtual ~Value() = default;
 
     virtual ValueType type() const noexcept = 0;
-    virtual ptr_value clone() const         = 0;
-    virtual ptr_value makeNew() const       = 0;
-    virtual void reset()                    = 0;
+    virtual ptr_value clone() const = 0;
+    virtual ptr_value makeNew() const = 0;
+    virtual void reset() = 0;
 
     virtual std::string str() const = 0;
 
@@ -170,7 +170,7 @@ public:
     }
 
     void reset() final {
-        value    = 0;
+        value = 0;
         rotation = Rotation::Default;
     }
 
@@ -224,8 +224,8 @@ public:
     }
 
     void reset() final {
-        from     = 0;
-        to       = 0;
+        from = 0;
+        to = 0;
         rotation = Rotation::Default;
     }
 
@@ -279,8 +279,8 @@ public:
     }
 
     void reset() final {
-        x        = {};
-        y        = {};
+        x = {};
+        y = {};
         rotation = Rotation::Default;
     }
 
@@ -484,9 +484,9 @@ public:
 
     void reset() final {
         value.clear();
-        rotation    = Rotation::N;
-        anchor      = {};
-        last.value  = -1;
+        rotation = Rotation::N;
+        anchor = {};
+        last.value = -1;
         count.value = 0;
     }
 
@@ -585,7 +585,7 @@ public:
 
     void reset() final {
         value.clear();
-        last.value  = -1;
+        last.value = -1;
         count.value = 0;
     }
 
@@ -634,7 +634,7 @@ public:
     }
 
     void update() {
-        last.value  = static_cast<i32>(value.size()) - 1;
+        last.value = static_cast<i32>(value.size()) - 1;
         count.value = static_cast<i32>(value.size());
     }
 

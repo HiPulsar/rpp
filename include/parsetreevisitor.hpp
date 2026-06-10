@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -39,9 +39,9 @@ class IPTExpressionNode;
 class IPTStatementNode {
 protected:
     using ptr_stat_v = std::vector<std::unique_ptr<IPTStatementNode>>;
-    using ptr_stat   = std::unique_ptr<IPTStatementNode>;
+    using ptr_stat = std::unique_ptr<IPTStatementNode>;
     using ptr_expr_v = std::vector<std::unique_ptr<IPTExpressionNode>>;
-    using ptr_expr   = std::unique_ptr<IPTExpressionNode>;
+    using ptr_expr = std::unique_ptr<IPTExpressionNode>;
 
 public:
     virtual ~IPTStatementNode() = default;
@@ -49,25 +49,25 @@ public:
     virtual bool hasNode(ExpressionID id) const = 0;
 
     virtual void accept(IPTStatementNodeVisitor& visitor) = 0;
-    virtual StatementID id() const noexcept               = 0;
+    virtual StatementID id() const noexcept = 0;
 };
 
 class IPTExpressionNode {
 protected:
     using ptr_expr_v = std::vector<std::unique_ptr<IPTExpressionNode>>;
-    using ptr_expr   = std::unique_ptr<IPTExpressionNode>;
+    using ptr_expr = std::unique_ptr<IPTExpressionNode>;
 
 public:
     virtual ~IPTExpressionNode() = default;
 
-    virtual bool hasNode(ExpressionID id) const                                                                    = 0;
+    virtual bool hasNode(ExpressionID id) const = 0;
     virtual bool hasOnlyNodes(const std::vector<ExpressionID>& ids, const std::vector<ExpressionID>& ignore) const = 0;
-    virtual bool hasKW(std::string_view kw_name) const                                                             = 0;
-    virtual std::vector<Token*> getTokens() const                                                                  = 0;
-    virtual Token* getLastToken() const                                                                            = 0;
+    virtual bool hasKW(std::string_view kw_name) const = 0;
+    virtual std::vector<Token*> getTokens() const = 0;
+    virtual Token* getLastToken() const = 0;
 
     virtual void accept(IPTExpressionNodeVisitor& visitor) = 0;
-    virtual ExpressionID id() const noexcept               = 0;
+    virtual ExpressionID id() const noexcept = 0;
 };
 
 class PTEmptyStatement;
@@ -92,33 +92,33 @@ public:
         m_visitor = visitor;
     }
 
-    virtual std::unique_ptr<Error> parse(PTEmptyStatement& node)              = 0;
-    virtual std::unique_ptr<Error> parse(PTExprStatement& node)               = 0;
-    virtual std::unique_ptr<Error> parse(PTForStatement& node)                = 0;
-    virtual std::unique_ptr<Error> parse(PTIfStatement& node)                 = 0;
-    virtual std::unique_ptr<Error> parse(PTDeclStatement& node)               = 0;
-    virtual std::unique_ptr<Error> parse(PTFunctionDefStatement& node)        = 0;
-    virtual std::unique_ptr<Error> parse(PTFunctionDeclStatement& node)       = 0;
-    virtual std::unique_ptr<Error> parse(PTNestedFunctionDefStatement& node)  = 0;
+    virtual std::unique_ptr<Error> parse(PTEmptyStatement& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTExprStatement& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTForStatement& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTIfStatement& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTDeclStatement& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTFunctionDefStatement& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTFunctionDeclStatement& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTNestedFunctionDefStatement& node) = 0;
     virtual std::unique_ptr<Error> parse(PTNestedFunctionDeclStatement& node) = 0;
-    virtual std::unique_ptr<Error> parse(PTNestedDeclStatement& node)         = 0;
-    virtual std::unique_ptr<Error> parse(PTReturnStatement& node)             = 0;
-    virtual std::unique_ptr<Error> parse(PTBreakStatement& node)              = 0;
-    virtual std::unique_ptr<Error> parse(PTContinueStatement& node)           = 0;
+    virtual std::unique_ptr<Error> parse(PTNestedDeclStatement& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTReturnStatement& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTBreakStatement& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTContinueStatement& node) = 0;
 
-    virtual void visit(PTEmptyStatement& node)              = 0;
-    virtual void visit(PTExprStatement& node)               = 0;
-    virtual void visit(PTForStatement& node)                = 0;
-    virtual void visit(PTIfStatement& node)                 = 0;
-    virtual void visit(PTDeclStatement& node)               = 0;
-    virtual void visit(PTFunctionDefStatement& node)        = 0;
-    virtual void visit(PTFunctionDeclStatement& node)       = 0;
-    virtual void visit(PTNestedFunctionDefStatement& node)  = 0;
+    virtual void visit(PTEmptyStatement& node) = 0;
+    virtual void visit(PTExprStatement& node) = 0;
+    virtual void visit(PTForStatement& node) = 0;
+    virtual void visit(PTIfStatement& node) = 0;
+    virtual void visit(PTDeclStatement& node) = 0;
+    virtual void visit(PTFunctionDefStatement& node) = 0;
+    virtual void visit(PTFunctionDeclStatement& node) = 0;
+    virtual void visit(PTNestedFunctionDefStatement& node) = 0;
     virtual void visit(PTNestedFunctionDeclStatement& node) = 0;
-    virtual void visit(PTNestedDeclStatement& node)         = 0;
-    virtual void visit(PTReturnStatement& node)             = 0;
-    virtual void visit(PTBreakStatement& node)              = 0;
-    virtual void visit(PTContinueStatement& node)           = 0;
+    virtual void visit(PTNestedDeclStatement& node) = 0;
+    virtual void visit(PTReturnStatement& node) = 0;
+    virtual void visit(PTBreakStatement& node) = 0;
+    virtual void visit(PTContinueStatement& node) = 0;
 
 protected:
     IPTExpressionNodeVisitor* m_visitor;
@@ -165,55 +165,55 @@ public:
         m_currToken = t;
     }
 
-    virtual std::unique_ptr<Error> parse(PTInvalidExpression& node)        = 0;
-    virtual std::unique_ptr<Error> parse(PTEmptyExpression& node)          = 0;
-    virtual std::unique_ptr<Error> parse(PTLiteralExpression& node)        = 0;
-    virtual std::unique_ptr<Error> parse(PTIdentifierExpression& node)     = 0;
-    virtual std::unique_ptr<Error> parse(PTKeywordExpression& node)        = 0;
-    virtual std::unique_ptr<Error> parse(PTAssignmentExpression& node)     = 0;
-    virtual std::unique_ptr<Error> parse(PTArithmeticExpression& node)     = 0;
-    virtual std::unique_ptr<Error> parse(PTComparisonExpression& node)     = 0;
-    virtual std::unique_ptr<Error> parse(PTLogicalExpression& node)        = 0;
-    virtual std::unique_ptr<Error> parse(PTUnaryLogicalExpression& node)   = 0;
-    virtual std::unique_ptr<Error> parse(PTReturnTypeExpression& node)     = 0;
-    virtual std::unique_ptr<Error> parse(PTFunctionCallExpression& node)   = 0;
-    virtual std::unique_ptr<Error> parse(PTForRangeExpression& node)       = 0;
-    virtual std::unique_ptr<Error> parse(PTMemberAccessExpression& node)   = 0;
-    virtual std::unique_ptr<Error> parse(PTErrorExpression& node)          = 0;
-    virtual std::unique_ptr<Error> parse(PTWarningExpression& node)        = 0;
-    virtual std::unique_ptr<Error> parse(PTAssertExpression& node)         = 0;
+    virtual std::unique_ptr<Error> parse(PTInvalidExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTEmptyExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTLiteralExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTIdentifierExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTKeywordExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTAssignmentExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTArithmeticExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTComparisonExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTLogicalExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTUnaryLogicalExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTReturnTypeExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTFunctionCallExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTForRangeExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTMemberAccessExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTErrorExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTWarningExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTAssertExpression& node) = 0;
     virtual std::unique_ptr<Error> parse(PTArraySubscriptExpression& node) = 0;
     virtual std::unique_ptr<Error> parse(PTPercentLiteralExpression& node) = 0;
-    virtual std::unique_ptr<Error> parse(PTStringLiteralExpression& node)  = 0;
-    virtual std::unique_ptr<Error> parse(PTRangeLiteralExpression& node)   = 0;
-    virtual std::unique_ptr<Error> parse(PTCoordLiteralExpression& node)   = 0;
-    virtual std::unique_ptr<Error> parse(PTSeparatorExpression& node)      = 0;
-    virtual std::unique_ptr<Error> parse(PTDeclTypeExpression& node)       = 0;
+    virtual std::unique_ptr<Error> parse(PTStringLiteralExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTRangeLiteralExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTCoordLiteralExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTSeparatorExpression& node) = 0;
+    virtual std::unique_ptr<Error> parse(PTDeclTypeExpression& node) = 0;
 
-    virtual void visit(PTInvalidExpression& node)        = 0;
-    virtual void visit(PTEmptyExpression& node)          = 0;
-    virtual void visit(PTLiteralExpression& node)        = 0;
-    virtual void visit(PTIdentifierExpression& node)     = 0;
-    virtual void visit(PTKeywordExpression& node)        = 0;
-    virtual void visit(PTAssignmentExpression& node)     = 0;
-    virtual void visit(PTArithmeticExpression& node)     = 0;
-    virtual void visit(PTComparisonExpression& node)     = 0;
-    virtual void visit(PTLogicalExpression& node)        = 0;
-    virtual void visit(PTUnaryLogicalExpression& node)   = 0;
-    virtual void visit(PTReturnTypeExpression& node)     = 0;
-    virtual void visit(PTFunctionCallExpression& node)   = 0;
-    virtual void visit(PTForRangeExpression& node)       = 0;
-    virtual void visit(PTMemberAccessExpression& node)   = 0;
-    virtual void visit(PTErrorExpression& node)          = 0;
-    virtual void visit(PTWarningExpression& node)        = 0;
-    virtual void visit(PTAssertExpression& node)         = 0;
+    virtual void visit(PTInvalidExpression& node) = 0;
+    virtual void visit(PTEmptyExpression& node) = 0;
+    virtual void visit(PTLiteralExpression& node) = 0;
+    virtual void visit(PTIdentifierExpression& node) = 0;
+    virtual void visit(PTKeywordExpression& node) = 0;
+    virtual void visit(PTAssignmentExpression& node) = 0;
+    virtual void visit(PTArithmeticExpression& node) = 0;
+    virtual void visit(PTComparisonExpression& node) = 0;
+    virtual void visit(PTLogicalExpression& node) = 0;
+    virtual void visit(PTUnaryLogicalExpression& node) = 0;
+    virtual void visit(PTReturnTypeExpression& node) = 0;
+    virtual void visit(PTFunctionCallExpression& node) = 0;
+    virtual void visit(PTForRangeExpression& node) = 0;
+    virtual void visit(PTMemberAccessExpression& node) = 0;
+    virtual void visit(PTErrorExpression& node) = 0;
+    virtual void visit(PTWarningExpression& node) = 0;
+    virtual void visit(PTAssertExpression& node) = 0;
     virtual void visit(PTArraySubscriptExpression& node) = 0;
     virtual void visit(PTPercentLiteralExpression& node) = 0;
-    virtual void visit(PTStringLiteralExpression& node)  = 0;
-    virtual void visit(PTRangeLiteralExpression& node)   = 0;
-    virtual void visit(PTCoordLiteralExpression& node)   = 0;
-    virtual void visit(PTSeparatorExpression& node)      = 0;
-    virtual void visit(PTDeclTypeExpression& node)       = 0;
+    virtual void visit(PTStringLiteralExpression& node) = 0;
+    virtual void visit(PTRangeLiteralExpression& node) = 0;
+    virtual void visit(PTCoordLiteralExpression& node) = 0;
+    virtual void visit(PTSeparatorExpression& node) = 0;
+    virtual void visit(PTDeclTypeExpression& node) = 0;
 
 protected:
     Token* m_currToken;
@@ -237,10 +237,10 @@ public:
 
 class PTExprStatement final : public IPTStatementNode {
 public:
-    PTExprStatement(const PTExprStatement&)            = delete;
+    PTExprStatement(const PTExprStatement&) = delete;
     PTExprStatement& operator=(const PTExprStatement&) = delete;
 
-    PTExprStatement(PTExprStatement&&)            = default;
+    PTExprStatement(PTExprStatement&&) = default;
     PTExprStatement& operator=(PTExprStatement&&) = default;
 
     PTExprStatement()
@@ -292,10 +292,10 @@ private:
 
 class PTForStatement final : public IPTStatementNode {
 public:
-    PTForStatement(const PTForStatement&)            = delete;
+    PTForStatement(const PTForStatement&) = delete;
     PTForStatement& operator=(const PTForStatement&) = delete;
 
-    PTForStatement(PTForStatement&&)            = default;
+    PTForStatement(PTForStatement&&) = default;
     PTForStatement& operator=(PTForStatement&&) = default;
 
     PTForStatement()
@@ -407,10 +407,10 @@ private:
 
 class PTIfStatement final : public IPTStatementNode {
 public:
-    PTIfStatement(const PTIfStatement&)            = delete;
+    PTIfStatement(const PTIfStatement&) = delete;
     PTIfStatement& operator=(const PTIfStatement&) = delete;
 
-    PTIfStatement(PTIfStatement&&)            = default;
+    PTIfStatement(PTIfStatement&&) = default;
     PTIfStatement& operator=(PTIfStatement&&) = default;
 
     PTIfStatement()
@@ -522,10 +522,10 @@ private:
 
 class PTDeclStatement final : public IPTStatementNode {
 public:
-    PTDeclStatement(const PTDeclStatement&)            = delete;
+    PTDeclStatement(const PTDeclStatement&) = delete;
     PTDeclStatement& operator=(const PTDeclStatement&) = delete;
 
-    PTDeclStatement(PTDeclStatement&&)            = default;
+    PTDeclStatement(PTDeclStatement&&) = default;
     PTDeclStatement& operator=(PTDeclStatement&&) = default;
 
     PTDeclStatement()
@@ -577,10 +577,10 @@ private:
 
 class PTFunctionDefStatement final : public IPTStatementNode {
 public:
-    PTFunctionDefStatement(const PTFunctionDefStatement&)            = delete;
+    PTFunctionDefStatement(const PTFunctionDefStatement&) = delete;
     PTFunctionDefStatement& operator=(const PTFunctionDefStatement&) = delete;
 
-    PTFunctionDefStatement(PTFunctionDefStatement&&)            = default;
+    PTFunctionDefStatement(PTFunctionDefStatement&&) = default;
     PTFunctionDefStatement& operator=(PTFunctionDefStatement&&) = default;
 
     PTFunctionDefStatement()
@@ -677,10 +677,10 @@ private:
 
 class PTFunctionDeclStatement final : public IPTStatementNode {
 public:
-    PTFunctionDeclStatement(const PTFunctionDeclStatement&)            = delete;
+    PTFunctionDeclStatement(const PTFunctionDeclStatement&) = delete;
     PTFunctionDeclStatement& operator=(const PTFunctionDeclStatement&) = delete;
 
-    PTFunctionDeclStatement(PTFunctionDeclStatement&&)            = default;
+    PTFunctionDeclStatement(PTFunctionDeclStatement&&) = default;
     PTFunctionDeclStatement& operator=(PTFunctionDeclStatement&&) = default;
 
     PTFunctionDeclStatement()
@@ -762,10 +762,10 @@ private:
 
 class PTNestedFunctionDefStatement final : public IPTStatementNode {
 public:
-    PTNestedFunctionDefStatement(const PTNestedFunctionDefStatement&)            = delete;
+    PTNestedFunctionDefStatement(const PTNestedFunctionDefStatement&) = delete;
     PTNestedFunctionDefStatement& operator=(const PTNestedFunctionDefStatement&) = delete;
 
-    PTNestedFunctionDefStatement(PTNestedFunctionDefStatement&&)            = default;
+    PTNestedFunctionDefStatement(PTNestedFunctionDefStatement&&) = default;
     PTNestedFunctionDefStatement& operator=(PTNestedFunctionDefStatement&&) = default;
 
     PTNestedFunctionDefStatement()
@@ -862,10 +862,10 @@ private:
 
 class PTNestedFunctionDeclStatement final : public IPTStatementNode {
 public:
-    PTNestedFunctionDeclStatement(const PTNestedFunctionDeclStatement&)            = delete;
+    PTNestedFunctionDeclStatement(const PTNestedFunctionDeclStatement&) = delete;
     PTNestedFunctionDeclStatement& operator=(const PTNestedFunctionDeclStatement&) = delete;
 
-    PTNestedFunctionDeclStatement(PTNestedFunctionDeclStatement&&)            = default;
+    PTNestedFunctionDeclStatement(PTNestedFunctionDeclStatement&&) = default;
     PTNestedFunctionDeclStatement& operator=(PTNestedFunctionDeclStatement&&) = default;
 
     PTNestedFunctionDeclStatement()
@@ -947,10 +947,10 @@ private:
 
 class PTNestedDeclStatement final : public IPTStatementNode {
 public:
-    PTNestedDeclStatement(const PTNestedDeclStatement&)            = delete;
+    PTNestedDeclStatement(const PTNestedDeclStatement&) = delete;
     PTNestedDeclStatement& operator=(const PTNestedDeclStatement&) = delete;
 
-    PTNestedDeclStatement(PTNestedDeclStatement&&)            = default;
+    PTNestedDeclStatement(PTNestedDeclStatement&&) = default;
     PTNestedDeclStatement& operator=(PTNestedDeclStatement&&) = default;
 
     PTNestedDeclStatement()
@@ -1032,10 +1032,10 @@ private:
 
 class PTReturnStatement final : public IPTStatementNode {
 public:
-    PTReturnStatement(const PTReturnStatement&)            = delete;
+    PTReturnStatement(const PTReturnStatement&) = delete;
     PTReturnStatement& operator=(const PTReturnStatement&) = delete;
 
-    PTReturnStatement(PTReturnStatement&&)            = default;
+    PTReturnStatement(PTReturnStatement&&) = default;
     PTReturnStatement& operator=(PTReturnStatement&&) = default;
 
     PTReturnStatement()
@@ -1102,10 +1102,10 @@ private:
 
 class PTBreakStatement final : public IPTStatementNode {
 public:
-    PTBreakStatement(const PTBreakStatement&)            = delete;
+    PTBreakStatement(const PTBreakStatement&) = delete;
     PTBreakStatement& operator=(const PTBreakStatement&) = delete;
 
-    PTBreakStatement(PTBreakStatement&&)            = default;
+    PTBreakStatement(PTBreakStatement&&) = default;
     PTBreakStatement& operator=(PTBreakStatement&&) = default;
 
     PTBreakStatement()
@@ -1157,10 +1157,10 @@ private:
 
 class PTContinueStatement final : public IPTStatementNode {
 public:
-    PTContinueStatement(const PTContinueStatement&)            = delete;
+    PTContinueStatement(const PTContinueStatement&) = delete;
     PTContinueStatement& operator=(const PTContinueStatement&) = delete;
 
-    PTContinueStatement(PTContinueStatement&&)            = default;
+    PTContinueStatement(PTContinueStatement&&) = default;
     PTContinueStatement& operator=(PTContinueStatement&&) = default;
 
     PTContinueStatement()
@@ -1215,10 +1215,10 @@ private:
 */
 class PTInvalidExpression final : public IPTExpressionNode {
 public:
-    PTInvalidExpression(const PTInvalidExpression&)            = delete;
+    PTInvalidExpression(const PTInvalidExpression&) = delete;
     PTInvalidExpression& operator=(const PTInvalidExpression&) = delete;
 
-    PTInvalidExpression(PTInvalidExpression&&)            = default;
+    PTInvalidExpression(PTInvalidExpression&&) = default;
     PTInvalidExpression& operator=(PTInvalidExpression&&) = default;
 
     PTInvalidExpression()
@@ -1276,10 +1276,10 @@ public:
 
 class PTLiteralExpression final : public IPTExpressionNode {
 public:
-    PTLiteralExpression(const PTLiteralExpression&)            = delete;
+    PTLiteralExpression(const PTLiteralExpression&) = delete;
     PTLiteralExpression& operator=(const PTLiteralExpression&) = delete;
 
-    PTLiteralExpression(PTLiteralExpression&&)            = default;
+    PTLiteralExpression(PTLiteralExpression&&) = default;
     PTLiteralExpression& operator=(PTLiteralExpression&&) = default;
 
     PTLiteralExpression()
@@ -1320,10 +1320,10 @@ private:
 
 class PTIdentifierExpression final : public IPTExpressionNode {
 public:
-    PTIdentifierExpression(const PTIdentifierExpression&)            = delete;
+    PTIdentifierExpression(const PTIdentifierExpression&) = delete;
     PTIdentifierExpression& operator=(const PTIdentifierExpression&) = delete;
 
-    PTIdentifierExpression(PTIdentifierExpression&&)            = default;
+    PTIdentifierExpression(PTIdentifierExpression&&) = default;
     PTIdentifierExpression& operator=(PTIdentifierExpression&&) = default;
 
     PTIdentifierExpression()
@@ -1364,10 +1364,10 @@ private:
 
 class PTKeywordExpression final : public IPTExpressionNode {
 public:
-    PTKeywordExpression(const PTKeywordExpression&)            = delete;
+    PTKeywordExpression(const PTKeywordExpression&) = delete;
     PTKeywordExpression& operator=(const PTKeywordExpression&) = delete;
 
-    PTKeywordExpression(PTKeywordExpression&&)            = default;
+    PTKeywordExpression(PTKeywordExpression&&) = default;
     PTKeywordExpression& operator=(PTKeywordExpression&&) = default;
 
     PTKeywordExpression()
@@ -1408,10 +1408,10 @@ private:
 
 class PTAssignmentExpression final : public IPTExpressionNode {
 public:
-    PTAssignmentExpression(const PTAssignmentExpression&)            = delete;
+    PTAssignmentExpression(const PTAssignmentExpression&) = delete;
     PTAssignmentExpression& operator=(const PTAssignmentExpression&) = delete;
 
-    PTAssignmentExpression(PTAssignmentExpression&&)            = default;
+    PTAssignmentExpression(PTAssignmentExpression&&) = default;
     PTAssignmentExpression& operator=(PTAssignmentExpression&&) = default;
 
     PTAssignmentExpression()
@@ -1482,10 +1482,10 @@ private:
 
 class PTArithmeticExpression final : public IPTExpressionNode {
 public:
-    PTArithmeticExpression(const PTArithmeticExpression&)            = delete;
+    PTArithmeticExpression(const PTArithmeticExpression&) = delete;
     PTArithmeticExpression& operator=(const PTArithmeticExpression&) = delete;
 
-    PTArithmeticExpression(PTArithmeticExpression&&)            = default;
+    PTArithmeticExpression(PTArithmeticExpression&&) = default;
     PTArithmeticExpression& operator=(PTArithmeticExpression&&) = default;
 
     PTArithmeticExpression()
@@ -1556,10 +1556,10 @@ private:
 
 class PTComparisonExpression final : public IPTExpressionNode {
 public:
-    PTComparisonExpression(const PTComparisonExpression&)            = delete;
+    PTComparisonExpression(const PTComparisonExpression&) = delete;
     PTComparisonExpression& operator=(const PTComparisonExpression&) = delete;
 
-    PTComparisonExpression(PTComparisonExpression&&)            = default;
+    PTComparisonExpression(PTComparisonExpression&&) = default;
     PTComparisonExpression& operator=(PTComparisonExpression&&) = default;
 
     PTComparisonExpression()
@@ -1630,10 +1630,10 @@ private:
 
 class PTLogicalExpression final : public IPTExpressionNode {
 public:
-    PTLogicalExpression(const PTLogicalExpression&)            = delete;
+    PTLogicalExpression(const PTLogicalExpression&) = delete;
     PTLogicalExpression& operator=(const PTLogicalExpression&) = delete;
 
-    PTLogicalExpression(PTLogicalExpression&&)            = default;
+    PTLogicalExpression(PTLogicalExpression&&) = default;
     PTLogicalExpression& operator=(PTLogicalExpression&&) = default;
 
     PTLogicalExpression()
@@ -1704,10 +1704,10 @@ private:
 
 class PTUnaryLogicalExpression final : public IPTExpressionNode {
 public:
-    PTUnaryLogicalExpression(const PTUnaryLogicalExpression&)            = delete;
+    PTUnaryLogicalExpression(const PTUnaryLogicalExpression&) = delete;
     PTUnaryLogicalExpression& operator=(const PTUnaryLogicalExpression&) = delete;
 
-    PTUnaryLogicalExpression(PTUnaryLogicalExpression&&)            = default;
+    PTUnaryLogicalExpression(PTUnaryLogicalExpression&&) = default;
     PTUnaryLogicalExpression& operator=(PTUnaryLogicalExpression&&) = default;
 
     PTUnaryLogicalExpression()
@@ -1763,10 +1763,10 @@ private:
 
 class PTReturnTypeExpression final : public IPTExpressionNode {
 public:
-    PTReturnTypeExpression(const PTReturnTypeExpression&)            = delete;
+    PTReturnTypeExpression(const PTReturnTypeExpression&) = delete;
     PTReturnTypeExpression& operator=(const PTReturnTypeExpression&) = delete;
 
-    PTReturnTypeExpression(PTReturnTypeExpression&&)            = default;
+    PTReturnTypeExpression(PTReturnTypeExpression&&) = default;
     PTReturnTypeExpression& operator=(PTReturnTypeExpression&&) = default;
 
     PTReturnTypeExpression()
@@ -1852,10 +1852,10 @@ private:
 
 class PTFunctionCallExpression final : public IPTExpressionNode {
 public:
-    PTFunctionCallExpression(const PTFunctionCallExpression&)            = delete;
+    PTFunctionCallExpression(const PTFunctionCallExpression&) = delete;
     PTFunctionCallExpression& operator=(const PTFunctionCallExpression&) = delete;
 
-    PTFunctionCallExpression(PTFunctionCallExpression&&)            = default;
+    PTFunctionCallExpression(PTFunctionCallExpression&&) = default;
     PTFunctionCallExpression& operator=(PTFunctionCallExpression&&) = default;
 
     PTFunctionCallExpression()
@@ -1941,10 +1941,10 @@ private:
 
 class PTForRangeExpression final : public IPTExpressionNode {
 public:
-    PTForRangeExpression(const PTForRangeExpression&)            = delete;
+    PTForRangeExpression(const PTForRangeExpression&) = delete;
     PTForRangeExpression& operator=(const PTForRangeExpression&) = delete;
 
-    PTForRangeExpression(PTForRangeExpression&&)            = default;
+    PTForRangeExpression(PTForRangeExpression&&) = default;
     PTForRangeExpression& operator=(PTForRangeExpression&&) = default;
 
     PTForRangeExpression()
@@ -2015,10 +2015,10 @@ private:
 
 class PTMemberAccessExpression final : public IPTExpressionNode {
 public:
-    PTMemberAccessExpression(const PTMemberAccessExpression&)            = delete;
+    PTMemberAccessExpression(const PTMemberAccessExpression&) = delete;
     PTMemberAccessExpression& operator=(const PTMemberAccessExpression&) = delete;
 
-    PTMemberAccessExpression(PTMemberAccessExpression&&)            = default;
+    PTMemberAccessExpression(PTMemberAccessExpression&&) = default;
     PTMemberAccessExpression& operator=(PTMemberAccessExpression&&) = default;
 
     PTMemberAccessExpression()
@@ -2089,10 +2089,10 @@ private:
 
 class PTErrorExpression final : public IPTExpressionNode {
 public:
-    PTErrorExpression(const PTErrorExpression&)            = delete;
+    PTErrorExpression(const PTErrorExpression&) = delete;
     PTErrorExpression& operator=(const PTErrorExpression&) = delete;
 
-    PTErrorExpression(PTErrorExpression&&)            = default;
+    PTErrorExpression(PTErrorExpression&&) = default;
     PTErrorExpression& operator=(PTErrorExpression&&) = default;
 
     PTErrorExpression()
@@ -2178,10 +2178,10 @@ private:
 
 class PTWarningExpression final : public IPTExpressionNode {
 public:
-    PTWarningExpression(const PTWarningExpression&)            = delete;
+    PTWarningExpression(const PTWarningExpression&) = delete;
     PTWarningExpression& operator=(const PTWarningExpression&) = delete;
 
-    PTWarningExpression(PTWarningExpression&&)            = default;
+    PTWarningExpression(PTWarningExpression&&) = default;
     PTWarningExpression& operator=(PTWarningExpression&&) = default;
 
     PTWarningExpression()
@@ -2267,10 +2267,10 @@ private:
 
 class PTAssertExpression final : public IPTExpressionNode {
 public:
-    PTAssertExpression(const PTAssertExpression&)            = delete;
+    PTAssertExpression(const PTAssertExpression&) = delete;
     PTAssertExpression& operator=(const PTAssertExpression&) = delete;
 
-    PTAssertExpression(PTAssertExpression&&)            = default;
+    PTAssertExpression(PTAssertExpression&&) = default;
     PTAssertExpression& operator=(PTAssertExpression&&) = default;
 
     PTAssertExpression()
@@ -2356,10 +2356,10 @@ private:
 
 class PTArraySubscriptExpression final : public IPTExpressionNode {
 public:
-    PTArraySubscriptExpression(const PTArraySubscriptExpression&)            = delete;
+    PTArraySubscriptExpression(const PTArraySubscriptExpression&) = delete;
     PTArraySubscriptExpression& operator=(const PTArraySubscriptExpression&) = delete;
 
-    PTArraySubscriptExpression(PTArraySubscriptExpression&&)            = default;
+    PTArraySubscriptExpression(PTArraySubscriptExpression&&) = default;
     PTArraySubscriptExpression& operator=(PTArraySubscriptExpression&&) = default;
 
     PTArraySubscriptExpression()
@@ -2445,10 +2445,10 @@ private:
 
 class PTPercentLiteralExpression final : public IPTExpressionNode {
 public:
-    PTPercentLiteralExpression(const PTPercentLiteralExpression&)            = delete;
+    PTPercentLiteralExpression(const PTPercentLiteralExpression&) = delete;
     PTPercentLiteralExpression& operator=(const PTPercentLiteralExpression&) = delete;
 
-    PTPercentLiteralExpression(PTPercentLiteralExpression&&)            = default;
+    PTPercentLiteralExpression(PTPercentLiteralExpression&&) = default;
     PTPercentLiteralExpression& operator=(PTPercentLiteralExpression&&) = default;
 
     PTPercentLiteralExpression()
@@ -2504,10 +2504,10 @@ private:
 
 class PTStringLiteralExpression final : public IPTExpressionNode {
 public:
-    PTStringLiteralExpression(const PTStringLiteralExpression&)            = delete;
+    PTStringLiteralExpression(const PTStringLiteralExpression&) = delete;
     PTStringLiteralExpression& operator=(const PTStringLiteralExpression&) = delete;
 
-    PTStringLiteralExpression(PTStringLiteralExpression&&)            = default;
+    PTStringLiteralExpression(PTStringLiteralExpression&&) = default;
     PTStringLiteralExpression& operator=(PTStringLiteralExpression&&) = default;
 
     PTStringLiteralExpression()
@@ -2578,10 +2578,10 @@ private:
 
 class PTRangeLiteralExpression final : public IPTExpressionNode {
 public:
-    PTRangeLiteralExpression(const PTRangeLiteralExpression&)            = delete;
+    PTRangeLiteralExpression(const PTRangeLiteralExpression&) = delete;
     PTRangeLiteralExpression& operator=(const PTRangeLiteralExpression&) = delete;
 
-    PTRangeLiteralExpression(PTRangeLiteralExpression&&)            = default;
+    PTRangeLiteralExpression(PTRangeLiteralExpression&&) = default;
     PTRangeLiteralExpression& operator=(PTRangeLiteralExpression&&) = default;
 
     PTRangeLiteralExpression()
@@ -2652,10 +2652,10 @@ private:
 
 class PTCoordLiteralExpression final : public IPTExpressionNode {
 public:
-    PTCoordLiteralExpression(const PTCoordLiteralExpression&)            = delete;
+    PTCoordLiteralExpression(const PTCoordLiteralExpression&) = delete;
     PTCoordLiteralExpression& operator=(const PTCoordLiteralExpression&) = delete;
 
-    PTCoordLiteralExpression(PTCoordLiteralExpression&&)            = default;
+    PTCoordLiteralExpression(PTCoordLiteralExpression&&) = default;
     PTCoordLiteralExpression& operator=(PTCoordLiteralExpression&&) = default;
 
     PTCoordLiteralExpression()
@@ -2726,10 +2726,10 @@ private:
 
 class PTSeparatorExpression final : public IPTExpressionNode {
 public:
-    PTSeparatorExpression(const PTSeparatorExpression&)            = delete;
+    PTSeparatorExpression(const PTSeparatorExpression&) = delete;
     PTSeparatorExpression& operator=(const PTSeparatorExpression&) = delete;
 
-    PTSeparatorExpression(PTSeparatorExpression&&)            = default;
+    PTSeparatorExpression(PTSeparatorExpression&&) = default;
     PTSeparatorExpression& operator=(PTSeparatorExpression&&) = default;
 
     PTSeparatorExpression()
@@ -2800,10 +2800,10 @@ private:
 
 class PTDeclTypeExpression final : public IPTExpressionNode {
 public:
-    PTDeclTypeExpression(const PTDeclTypeExpression&)            = delete;
+    PTDeclTypeExpression(const PTDeclTypeExpression&) = delete;
     PTDeclTypeExpression& operator=(const PTDeclTypeExpression&) = delete;
 
-    PTDeclTypeExpression(PTDeclTypeExpression&&)            = default;
+    PTDeclTypeExpression(PTDeclTypeExpression&&) = default;
     PTDeclTypeExpression& operator=(PTDeclTypeExpression&&) = default;
 
     PTDeclTypeExpression()

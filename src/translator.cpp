@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -20,6 +20,7 @@
 // IN THE SOFTWARE.
 //
 #include <translator.hpp>
+
 #include <abstractsyntaxtree.hpp>
 #include <abstractsyntaxtreevisitor.hpp>
 
@@ -33,5 +34,5 @@ void Translator::run(AbstractSyntaxTree& abstractTree) {
     abstractTree.getMainNode()->accept(evaluator);
 
     m_automappers = std::move(evaluator.automappers());
-    m_failed      = evaluator.failed();
+    m_failed = evaluator.failed();
 }

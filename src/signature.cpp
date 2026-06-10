@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -20,6 +20,7 @@
 // IN THE SOFTWARE.
 //
 #include <signature.hpp>
+
 #include <token.hpp>
 
 /*
@@ -60,7 +61,8 @@ bool Signature::isVariadicConvertible(const Signature& call) const {
             break;
 
         for (; j < call.m_types.size(); ++j) {
-            if ((call.m_types[j] == m_types[i]) || (Token::isConvertible(call.m_types[j], m_types[i])) || (Token::isVariadic(call.m_types[j], m_types[i]))) {} // skip
+            if ((call.m_types[j] == m_types[i]) || (Token::isConvertible(call.m_types[j], m_types[i])) || (Token::isVariadic(call.m_types[j], m_types[i]))) {
+            } // skip
             else
                 break;
         }

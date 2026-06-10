@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -61,9 +61,21 @@ struct PosRule {
     }
 };
 
+struct ModuloRule {
+    i32 mod_x;
+    i32 mod_y;
+    i32 offset_x;
+    i32 offset_y;
+
+    friend bool operator==(const ModuloRule& lhs, const ModuloRule& rhs) {
+        return lhs.mod_x == rhs.mod_x && lhs.mod_y == rhs.mod_y && lhs.offset_x == rhs.offset_x && lhs.offset_y == rhs.offset_y;
+    }
+};
+
 struct Rule {
     IndexInfo indexInfo;
     std::vector<PosRule> posRules;
+    std::vector<ModuloRule> moduloRules;
     f32 random;
     bool noDefaultRule;
 

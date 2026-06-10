@@ -1,11 +1,11 @@
-# clang-format 20
+# clang-format 21
 Language: Cpp
 
 AccessModifierOffset: -4
 AlignAfterOpenBracket: BlockIndent
 AlignArrayOfStructures: None
-AlignConsecutiveAssignments: 
-    Enabled: true
+AlignConsecutiveAssignments:
+    Enabled: false
     AcrossEmptyLines: false
     AcrossComments: false
     AlignCompound: false
@@ -14,7 +14,7 @@ AlignConsecutiveBitFields:
     Enabled: true
     AcrossEmptyLines: false
     AcrossComments: false
-AlignConsecutiveDeclarations: 
+AlignConsecutiveDeclarations:
     Enabled: false
 AlignConsecutiveMacros:
     Enabled: true
@@ -44,8 +44,9 @@ AllowShortLoopsOnASingleLine: false
 AllowShortNamespacesOnASingleLine: false
 AlwaysBreakBeforeMultilineStrings: false
 AttributeMacros: []
-BinPackArguments: true
-BinPackParameters: true
+BinPackArguments: false
+BinPackLongBracedList: false
+BinPackParameters: false
 BitFieldColonSpacing: Both
 BraceWrapping:
     AfterCaseLabel: false
@@ -73,8 +74,9 @@ BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Custom
 BreakBeforeConceptDeclarations: Always
 BreakBeforeInlineASMColon: OnlyMultiline
+BreakBeforeTemplateCloser: true
 BreakBeforeTernaryOperators: true
-BreakBinaryOperations: RespectPrecedence
+BreakBinaryOperations: Never
 BreakConstructorInitializers: BeforeComma
 BreakFunctionDefinitionParameters: false
 BreakInheritanceList: BeforeComma
@@ -94,10 +96,16 @@ ExperimentalAutoDetectBinPacking: false
 FixNamespaceComments: false
 ForEachMacros: []
 IfMacros: []
-IncludeBlocks: Preserve
-# IncludeCategories:
-# IncludeIsMainRegex: 
-# IncludeIsMainSourceRegex: 
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: '<.*.hpp>'
+    Priority: 1
+    SortPriority: 1
+  - Regex: '<'
+    Priority: 2
+    SortPriority: 2
+# IncludeIsMainRegex:
+# IncludeIsMainSourceRegex:
 IndentAccessModifiers: false
 IndentCaseBlocks: false
 IndentCaseLabels: true
@@ -126,10 +134,12 @@ LineEnding: LF
 # MacroBlockBegin:
 # MacroBlockEnd:
 # Macros: []
+# MacrosSkippedByRemoveParentheses: []
 MainIncludeChar: AngleBracket
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: None
 # NamespaceMacros: []
+# OneLineFormatOffRegex:
 PPIndentWidth: -1
 PackConstructorInitializers: Never
 PenaltyBreakAssignment: 100
@@ -141,15 +151,15 @@ PenaltyBreakOpenParenthesis: 0
 PenaltyBreakScopeResolution: 100
 PenaltyBreakString: 0
 PenaltyBreakTemplateDeclaration: 0
-PenaltyExcessCharacter: 0
-PenaltyIndentedWhitespace: 0
-PenaltyReturnTypeOnItsOwnLine: 0
+PenaltyExcessCharacter: 1
+PenaltyIndentedWhitespace: 100
+PenaltyReturnTypeOnItsOwnLine: 100
 PointerAlignment: Left
 QualifierAlignment: Custom
 QualifierOrder: ['friend', 'static', 'inline', 'constexpr', 'const', 'volatile', 'type']
 # RawStringFormats:
 ReferenceAlignment: Left
-ReflowComments: true
+ReflowComments: Never
 RemoveBracesLLVM: false
 RemoveEmptyLinesInUnwrappedLines: true
 RemoveParentheses: Leave
@@ -163,6 +173,7 @@ SortIncludes: CaseInsensitive
 SortUsingDeclarations: Lexicographic
 SpaceAfterCStyleCast: false
 SpaceAfterLogicalNot: false
+SpaceAfterOperatorKeyword: false
 SpaceAfterTemplateKeyword: true
 SpaceAroundPointerQualifiers: Default
 SpaceBeforeAssignmentOperators: true

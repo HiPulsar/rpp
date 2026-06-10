@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -20,6 +20,7 @@
 // IN THE SOFTWARE.
 //
 #include <error.hpp>
+
 #include <token.hpp>
 #include <tokenh.hpp>
 
@@ -42,22 +43,14 @@ std::string Error::formatExpression(const std::vector<Token*>& tokens) {
         if ((t1->cat == TKeyword || t1->cat == TIdentifier || t1->cat == TLiteral) && (t2->cat == TKeyword || t2->cat == TIdentifier || t2->cat == TLiteral))
             s += ' ';
         // no space: '1_2' 'pos.x'
-        else if (*t1 != TH::MemberAccess
-                 && *t2 != TH::MemberAccess
-                 && t1->value != PU::StringLiteral
-                 && t2->value != PU::StringLiteral
-                 && *t1 != TH::FunctionCallOpen
-                 && *t2 != TH::FunctionCallOpen
-                 && *t2 != TH::FunctionCallClose
-                 && *t1 != TH::ArraySubscriptOpen
-                 && *t2 != TH::ArraySubscriptOpen
-                 && *t2 != TH::ArraySubscriptClose
-                 && *t1 != TH::Range
-                 && *t2 != TH::Range
-                 && *t1 != TH::ReturnType
-                 && *t2 != TH::ReturnType
-                 // following space: '1, 2'
-                 && t2->value != PU::Separator)
+        else if (
+            *t1 != TH::MemberAccess && *t2 != TH::MemberAccess && t1->value != PU::StringLiteral && t2->value != PU::StringLiteral
+            && *t1 != TH::FunctionCallOpen && *t2 != TH::FunctionCallOpen && *t2 != TH::FunctionCallClose && *t1 != TH::ArraySubscriptOpen
+            && *t2 != TH::ArraySubscriptOpen && *t2 != TH::ArraySubscriptClose && *t1 != TH::Range && *t2 != TH::Range && *t1 != TH::ReturnType
+            && *t2 != TH::ReturnType
+            // following space: '1, 2'
+            && t2->value != PU::Separator
+        )
             s += ' ';
         // following space when next is operator, keyword, identifier or literal: 'Pos() + 1'
         // 'Pos().x + 1'
@@ -196,7 +189,7 @@ std::string Error::strIncorrectValueType(ValueType type, ValueType expected) {
 }
 
 std::string Error::strNoOperatorOverload(ValueType left, ValueType right, NodeID op) {
-    std::string leftStr  = Token::typeToString(left);
+    std::string leftStr = Token::typeToString(left);
     std::string rightStr = Token::typeToString(right);
 
     switch (op) {
@@ -228,7 +221,8 @@ std::string Error::strNoSubscriptOperator(ValueType type) {
 }
 
 std::string Error::strInvalidPosType() {
-    return "Pos type has to be one of the following: '" + std::string{ KW::Full } + "', '" + std::string{ KW::Empty } + "', '" + std::string{ KW::Index } + "', '" + std::string{ KW::Notindex } + "'.";
+    return "Pos type has to be one of the following: '" + std::string{ KW::Full } + "', '" + std::string{ KW::Empty }
+         + "', '" + std::string{ KW::Index } + "', '" + std::string{ KW::Notindex } + "'.";
 }
 
 std::string Error::strReadOnlyAssignment() {
@@ -240,7 +234,7 @@ std::string Error::strReadOnlyAssignment() {
 */
 ErrUnexpectedEof::ErrUnexpectedEof(const Token& t) {
     m_line = t.line;
-    m_err  = Error::strUnexpectedEof();
+    m_err = Error::strUnexpectedEof();
 }
 
 /*
@@ -248,12 +242,12 @@ ErrUnexpectedEof::ErrUnexpectedEof(const Token& t) {
 */
 ErrUnexpectedToken::ErrUnexpectedToken(const Token& t) {
     m_line = t.line;
-    m_err  = Error::strUnexpectedToken(t.value);
+    m_err = Error::strUnexpectedToken(t.value);
 }
 
 ErrUnexpectedToken::ErrUnexpectedToken(const Token& t, std::string_view expected) {
     m_line = t.line;
-    m_err  = Error::strUnexpectedToken(t.value, expected);
+    m_err = Error::strUnexpectedToken(t.value, expected);
 }
 
 /*
@@ -295,7 +289,7 @@ ErrFileNotFound::ErrFileNotFound(const std::string& path, u32 line) {
 */
 ErrInvalidOutPath::ErrInvalidOutPath(const std::string& path, u32 line) {
     m_line = line;
-    m_err  = strInvalidOutPath(path);
+    m_err = strInvalidOutPath(path);
 }
 
 /*
@@ -303,7 +297,7 @@ ErrInvalidOutPath::ErrInvalidOutPath(const std::string& path, u32 line) {
 */
 ErrInvalidOutExtension::ErrInvalidOutExtension(const std::string& extension, u32 line) {
     m_line = line;
-    m_err  = strInvalidOutExtension(extension);
+    m_err = strInvalidOutExtension(extension);
 }
 
 /*
@@ -324,25 +318,25 @@ ErrPreprocNotIdentifier::ErrPreprocNotIdentifier(const Token& t) {
 */
 ErrMissingToken::ErrMissingToken(const Token& t, std::string_view missing) {
     m_line = t.line;
-    m_err  = Error::strMissingToken(missing);
+    m_err = Error::strMissingToken(missing);
 }
 
 /*
     ErrMissingExpressionFor
 */
 ErrMissingExpression::ErrMissingExpression(const std::vector<Token*>& tokens) {
-    m_line           = tokens.front()->line;
+    m_line = tokens.front()->line;
     std::string expr = formatExpression(tokens);
-    m_err            = Error::strMissingExpression(expr);
+    m_err = Error::strMissingExpression(expr);
 }
 
 /*
     ErrInvalidExpression
 */
 ErrInvalidExpression::ErrInvalidExpression(const std::vector<Token*>& tokens) {
-    m_line           = tokens.front()->line;
+    m_line = tokens.front()->line;
     std::string expr = formatExpression(tokens);
-    m_err            = Error::strInvalidExpression(expr);
+    m_err = Error::strInvalidExpression(expr);
 }
 
 /*
@@ -350,22 +344,22 @@ ErrInvalidExpression::ErrInvalidExpression(const std::vector<Token*>& tokens) {
 */
 ErrNotAMemberOf::ErrNotAMemberOf(const std::string& member, ValueType type, u32 line) {
     m_line = line;
-    m_err  = Error::strNotAMemberOf(member, type);
+    m_err = Error::strNotAMemberOf(member, type);
 }
 
 ErrNotAMemberOf::ErrNotAMemberOf(std::string_view member, ValueType type, u32 line) {
     m_line = line;
-    m_err  = Error::strNotAMemberOf(std::string{ member }, type);
+    m_err = Error::strNotAMemberOf(std::string{ member }, type);
 }
 
 ErrNotAMemberOf::ErrNotAMemberOf(const std::string& member, std::string_view name, u32 line) {
     m_line = line;
-    m_err  = Error::strNotAMemberOf(member, std::string{ name });
+    m_err = Error::strNotAMemberOf(member, std::string{ name });
 }
 
 ErrNotAMemberOf::ErrNotAMemberOf(std::string_view member, std::string_view name, u32 line) {
     m_line = line;
-    m_err  = Error::strNotAMemberOf(std::string{ member }, std::string{ name });
+    m_err = Error::strNotAMemberOf(std::string{ member }, std::string{ name });
 }
 
 /*
@@ -373,7 +367,7 @@ ErrNotAMemberOf::ErrNotAMemberOf(std::string_view member, std::string_view name,
 */
 ErrNameCallNotVariable::ErrNameCallNotVariable(u32 line) {
     m_line = line;
-    m_err  = Error::strNameCallNotVariable();
+    m_err = Error::strNameCallNotVariable();
 }
 
 /*
@@ -381,7 +375,7 @@ ErrNameCallNotVariable::ErrNameCallNotVariable(u32 line) {
 */
 ErrRedeclaration::ErrRedeclaration(const std::string& name, u32 line) {
     m_line = line;
-    m_err  = Error::strRedeclaration(name);
+    m_err = Error::strRedeclaration(name);
 }
 
 /*
@@ -389,7 +383,7 @@ ErrRedeclaration::ErrRedeclaration(const std::string& name, u32 line) {
 */
 ErrUndeclared::ErrUndeclared(const std::string& name, u32 line) {
     m_line = line;
-    m_err  = Error::strUndeclared(name);
+    m_err = Error::strUndeclared(name);
 }
 
 /*
@@ -397,7 +391,7 @@ ErrUndeclared::ErrUndeclared(const std::string& name, u32 line) {
 */
 ErrUnassignedVariable::ErrUnassignedVariable(const std::string& name, u32 line) {
     m_line = line;
-    m_err  = Error::strUnassignedVariable(name);
+    m_err = Error::strUnassignedVariable(name);
 }
 
 /*
@@ -405,12 +399,12 @@ ErrUnassignedVariable::ErrUnassignedVariable(const std::string& name, u32 line) 
 */
 ErrInvalidContext::ErrInvalidContext(std::string_view keyword, u32 line) {
     m_line = line;
-    m_err  = Error::strInvalidContext(std::string{ keyword });
+    m_err = Error::strInvalidContext(std::string{ keyword });
 }
 
 ErrMissingValue::ErrMissingValue(std::string_view keyword, u32 line) {
     m_line = line;
-    m_err  = Error::strMissingValue(std::string{ keyword });
+    m_err = Error::strMissingValue(std::string{ keyword });
 }
 
 /*
@@ -418,7 +412,7 @@ ErrMissingValue::ErrMissingValue(std::string_view keyword, u32 line) {
 */
 ErrFunctionSignatureNotFound::ErrFunctionSignatureNotFound(const std::string& name, u32 line) {
     m_line = line;
-    m_err  = Error::strFunctionSignatureNotFound(name);
+    m_err = Error::strFunctionSignatureNotFound(name);
 }
 
 /*
@@ -426,7 +420,7 @@ ErrFunctionSignatureNotFound::ErrFunctionSignatureNotFound(const std::string& na
 */
 ErrNestedSignatureNotFound::ErrNestedSignatureNotFound(const std::string& name, u32 line) {
     m_line = line;
-    m_err  = Error::strNestedSignatureNotFound(name);
+    m_err = Error::strNestedSignatureNotFound(name);
 }
 
 /*
@@ -434,7 +428,7 @@ ErrNestedSignatureNotFound::ErrNestedSignatureNotFound(const std::string& name, 
 */
 ErrNestedDifferentReturnType::ErrNestedDifferentReturnType(const std::string& name, ValueType expected, u32 line) {
     m_line = line;
-    m_err  = Error::strNestedDifferentReturnType(name, expected);
+    m_err = Error::strNestedDifferentReturnType(name, expected);
 }
 
 /*
@@ -442,7 +436,7 @@ ErrNestedDifferentReturnType::ErrNestedDifferentReturnType(const std::string& na
 */
 ErrReturnInvalidContext::ErrReturnInvalidContext(u32 line) {
     m_line = line;
-    m_err  = Error::strReturnInvalidContext();
+    m_err = Error::strReturnInvalidContext();
 }
 
 /*
@@ -450,7 +444,7 @@ ErrReturnInvalidContext::ErrReturnInvalidContext(u32 line) {
 */
 ErrBreakInvalidContext::ErrBreakInvalidContext(u32 line) {
     m_line = line;
-    m_err  = Error::strBreakInvalidContext();
+    m_err = Error::strBreakInvalidContext();
 }
 
 /*
@@ -458,7 +452,7 @@ ErrBreakInvalidContext::ErrBreakInvalidContext(u32 line) {
 */
 ErrContinueInvalidContext::ErrContinueInvalidContext(u32 line) {
     m_line = line;
-    m_err  = Error::strContinueInvalidContext();
+    m_err = Error::strContinueInvalidContext();
 }
 
 /*
@@ -466,7 +460,7 @@ ErrContinueInvalidContext::ErrContinueInvalidContext(u32 line) {
 */
 ErrInvokeInvalidContext::ErrInvokeInvalidContext(u32 line) {
     m_line = line;
-    m_err  = Error::strInvokeInvalidContext();
+    m_err = Error::strInvokeInvalidContext();
 }
 
 /*
@@ -474,7 +468,7 @@ ErrInvokeInvalidContext::ErrInvokeInvalidContext(u32 line) {
 */
 ErrMissingProperty::ErrMissingProperty(std::string_view keyword, u32 line) {
     m_line = line;
-    m_err  = Error::strMissingProperty(std::string{ keyword });
+    m_err = Error::strMissingProperty(std::string{ keyword });
 }
 
 /*
@@ -482,7 +476,7 @@ ErrMissingProperty::ErrMissingProperty(std::string_view keyword, u32 line) {
 */
 ErrMissingReturn::ErrMissingReturn(const std::string& name, u32 line) {
     m_line = line;
-    m_err  = Error::strMissingReturn(name);
+    m_err = Error::strMissingReturn(name);
 }
 
 /*
@@ -490,7 +484,7 @@ ErrMissingReturn::ErrMissingReturn(const std::string& name, u32 line) {
 */
 ErrIncorrectValueType::ErrIncorrectValueType(ValueType type, ValueType expected, u32 line) {
     m_line = line;
-    m_err  = Error::strIncorrectValueType(type, expected);
+    m_err = Error::strIncorrectValueType(type, expected);
 }
 
 /*
@@ -498,7 +492,7 @@ ErrIncorrectValueType::ErrIncorrectValueType(ValueType type, ValueType expected,
 */
 ErrNoOperatorOverload::ErrNoOperatorOverload(ValueType left, ValueType right, NodeID op, u32 line) {
     m_line = line;
-    m_err  = Error::strNoOperatorOverload(left, right, op);
+    m_err = Error::strNoOperatorOverload(left, right, op);
 }
 
 /*
@@ -506,7 +500,7 @@ ErrNoOperatorOverload::ErrNoOperatorOverload(ValueType left, ValueType right, No
 */
 ErrInvalidArguments::ErrInvalidArguments(const std::string& name, u32 line) {
     m_line = line;
-    m_err  = Error::strInvalidArguments(name);
+    m_err = Error::strInvalidArguments(name);
 }
 
 /*
@@ -514,7 +508,7 @@ ErrInvalidArguments::ErrInvalidArguments(const std::string& name, u32 line) {
 */
 ErrNoSubscriptOperator::ErrNoSubscriptOperator(ValueType type, u32 line) {
     m_line = line;
-    m_err  = Error::strNoSubscriptOperator(type);
+    m_err = Error::strNoSubscriptOperator(type);
 }
 
 /*
@@ -522,7 +516,7 @@ ErrNoSubscriptOperator::ErrNoSubscriptOperator(ValueType type, u32 line) {
 */
 ErrInvalidPosType::ErrInvalidPosType(u32 line) {
     m_line = line;
-    m_err  = Error::strInvalidPosType();
+    m_err = Error::strInvalidPosType();
 }
 
 /*
@@ -530,5 +524,5 @@ ErrInvalidPosType::ErrInvalidPosType(u32 line) {
 */
 ErrReadOnlyAssignment::ErrReadOnlyAssignment(u32 line) {
     m_line = line;
-    m_err  = Error::strReadOnlyAssignment();
+    m_err = Error::strReadOnlyAssignment();
 }

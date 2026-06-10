@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -20,6 +20,7 @@
 // IN THE SOFTWARE.
 //
 #include <app.hpp>
+
 #include <abstractsyntaxtree.hpp>
 #include <automapper.hpp>
 #include <externalresource.hpp>
@@ -43,7 +44,7 @@
 
 namespace {
 
-isize memory     = 0;
+isize memory = 0;
 isize max_memory = 0; // in bytes
 
 }
@@ -53,7 +54,7 @@ void* operator new(usize size) {
         isize tmp_max_memory = max_memory;
 
         max_memory = 0; // allow allocating beyond max_memory for the error
-        auto err   = std::overflow_error("Memory overflow");
+        auto err = std::overflow_error("Memory overflow");
         max_memory = tmp_max_memory;
 
         throw err;
@@ -67,7 +68,7 @@ void* operator new[](usize size) {
         isize tmp_max_memory = max_memory;
 
         max_memory = 0; // allow allocating beyond max_memory for the error
-        auto err   = std::overflow_error("Memory overflow");
+        auto err = std::overflow_error("Memory overflow");
         max_memory = tmp_max_memory;
 
         throw err;
@@ -99,9 +100,7 @@ void operator delete[](void* data) noexcept {
 */
 static void showHelp(const char* prog) {
     std::cout
-        << "Usage: "
-        << prog
-        << "[options] file...\n"
+        << "Usage: " << prog << "[options] file...\n"
         << "      --help               Display the help.\n"
         << "  -o, --output <file>      Write to <file> (same as #output).\n"
         << "  -i, --include <file>     A file to include (same as #include).\n"
@@ -131,7 +130,7 @@ CLI App::parseCLI(i32 argc, char** argv) {
                 if (i + 1 >= argc)
                     exitWithError(argv[0], "missing filename after --output");
 
-                cli.output           = argv[++i];
+                cli.output = argv[++i];
                 cli.skipPreprocessor = true;
             }
             else if (arg == "--include" || arg == "-i") {
@@ -146,7 +145,7 @@ CLI App::parseCLI(i32 argc, char** argv) {
                     exitWithError(argv[0], "missing value after --memory");
 
                 try {
-                    cli.memory           = std::stoll(argv[++i]) * 1024 * 1024;
+                    cli.memory = std::stoll(argv[++i]) * 1024 * 1024;
                     cli.skipPreprocessor = true;
                 } catch (...) {
                     exitWithError(argv[0], "--memory: value is not an integer");
@@ -229,7 +228,7 @@ i32 App::exec(i32 argc, char** argv) {
             std::cout << "Line count: " << rulesGen.lineCount() << '\n';
         }
 
-        auto end  = high_resolution_clock::now();
+        auto end = high_resolution_clock::now();
         auto time = duration_cast<duration<f64>>(end - beg).count();
 
         std::cout << "\n\n";

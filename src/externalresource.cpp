@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -20,6 +20,7 @@
 // IN THE SOFTWARE.
 //
 #include <externalresource.hpp>
+
 #include <aliases.hpp>
 #include <cli.hpp>
 #include <inputstream.hpp>
@@ -55,7 +56,8 @@ bool ExternalResource::isLoaded(const std::filesystem::path& path) const {
 
     auto fileName = std::filesystem::canonical(path).string();
     return std::find_if(
-               info().begin(), info().end(),
+               info().begin(),
+               info().end(),
                [&](const Info& i) -> bool {
                    return i.fileName == fileName;
                }

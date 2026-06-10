@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -20,6 +20,7 @@
 // IN THE SOFTWARE.
 //
 #include <token.hpp>
+
 #include <tokenh.hpp>
 
 /*
@@ -51,12 +52,14 @@ bool Token::isKeyword(const std::string& s) noexcept {
             break;
 
         case 5:
-            if (s == KW::Array || s == KW::Break || s == KW::Coord || s == KW::Count || s == KW::Empty || s == KW::Error || s == KW::False || s == KW::Float || s == KW::Group || s == KW::Index || s == KW::Range)
+            if (s == KW::Array || s == KW::Break || s == KW::Coord || s == KW::Count || s == KW::Empty || s == KW::Error
+                || s == KW::False || s == KW::Float || s == KW::Group || s == KW::Index || s == KW::Range)
                 return true;
             break;
 
         case 6:
-            if (s == KW::Anchor || s == KW::Assert || s == KW::Insert || s == KW::Invoke || s == KW::Nested || s == KW::Newrun || s == KW::Nocopy || s == KW::Object || s == KW::Random || s == KW::Return || s == KW::Rotate || s == KW::String)
+            if (s == KW::Anchor || s == KW::Assert || s == KW::Insert || s == KW::Invoke || s == KW::Modulo || s == KW::Nested || s == KW::Newrun
+                || s == KW::Nocopy || s == KW::Object || s == KW::Random || s == KW::Return || s == KW::Rotate || s == KW::String)
                 return true;
             break;
 
@@ -94,14 +97,8 @@ bool Token::isPunctuator(const std::string& s) noexcept {
     if (s == PU::ArraySubscriptClose
         || s == PU::ArraySubscriptOpen
         // || s == PU::DecimalPoint
-        || s == PU::FunctionCallClose
-        || s == PU::FunctionCallOpen
-        || s == PU::MemberAccess
-        || s == PU::Percent
-        || s == PU::Preproc
-        || s == PU::Separator
-        || s == PU::StatementEnd
-        || s == PU::StringLiteral)
+        || s == PU::FunctionCallClose || s == PU::FunctionCallOpen || s == PU::MemberAccess || s == PU::Percent
+        || s == PU::Preproc || s == PU::Separator || s == PU::StatementEnd || s == PU::StringLiteral)
         return true;
 
     return false;
@@ -111,31 +108,16 @@ bool Token::isPunctuator(char c) noexcept {
     if (c == PU::CharArraySubscriptClose
         || c == PU::CharArraySubscriptOpen
         // || c == PU::CharDecimalPoint
-        || c == PU::CharFunctionCallClose
-        || c == PU::CharFunctionCallOpen
-        || c == PU::CharMemberAccess
-        || c == PU::CharPercent
-        || c == PU::CharPreproc
-        || c == PU::CharSeparator
-        || c == PU::CharStatementEnd
-        || c == PU::CharStringLiteral)
+        || c == PU::CharFunctionCallClose || c == PU::CharFunctionCallOpen || c == PU::CharMemberAccess || c == PU::CharPercent
+        || c == PU::CharPreproc || c == PU::CharSeparator || c == PU::CharStatementEnd || c == PU::CharStringLiteral)
         return true;
 
     return false;
 }
 
 bool Token::isOperator(const std::string& s) noexcept {
-    if (s == OP::Addition
-        || s == OP::Assignment
-        || s == OP::Division
-        || s == OP::Equal
-        || s == OP::GreaterThan
-        || s == OP::GreaterThanOrEqual
-        || s == OP::LessThan
-        || s == OP::LessThanOrEqual
-        || s == OP::Multiplication
-        || s == OP::NotEqual
-        || s == OP::Range
+    if (s == OP::Addition || s == OP::Assignment || s == OP::Division || s == OP::Equal || s == OP::GreaterThan || s == OP::GreaterThanOrEqual
+        || s == OP::LessThan || s == OP::LessThanOrEqual || s == OP::Multiplication || s == OP::NotEqual || s == OP::Range
         || s == OP::ReturnType
         // || s == OP::Subtraction
         || s == OP::UnaryNegation)
@@ -145,13 +127,8 @@ bool Token::isOperator(const std::string& s) noexcept {
 }
 
 bool Token::isOperator(char c) noexcept {
-    if (c == OP::CharAddition
-        || c == OP::CharAssignment
-        || c == OP::CharDivision
-        || c == OP::CharGreaterThan
-        || c == OP::CharLessThan
-        || c == OP::CharLogicalNot
-        || c == OP::CharMultiplication
+    if (c == OP::CharAddition || c == OP::CharAssignment || c == OP::CharDivision || c == OP::CharGreaterThan
+        || c == OP::CharLessThan || c == OP::CharLogicalNot || c == OP::CharMultiplication
         || c == OP::CharRange
         // || c == OP::CharSubtraction
         || c == OP::CharUnaryNegation)
@@ -255,7 +232,8 @@ bool Token::isSingleRotation(std::string_view s) noexcept {
 }
 
 bool Token::isRotation(std::string_view s) noexcept {
-    return s == "N" || s == "V" || s == "H" || s == "R" || s == "VH" || s == "VR" || s == "HR" || s == "VHR" || s == "X" || s == "Y" || s == "XY" || s == "XR" || s == "YR" || s == "XYR";
+    return s == "N" || s == "V" || s == "H" || s == "R" || s == "VH" || s == "VR" || s == "HR" || s == "VHR" || s == "X"
+        || s == "Y" || s == "XY" || s == "XR" || s == "YR" || s == "XYR";
 }
 
 bool Token::isPos(std::string_view s) noexcept {

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -20,6 +20,7 @@
 // IN THE SOFTWARE.
 //
 #include <preprocessor.hpp>
+
 #include <cli.hpp>
 #include <enums.hpp>
 #include <error.hpp>
@@ -41,7 +42,7 @@ void Preprocessor::run(const std::filesystem::path& path, const CLI& cli) {
     errorOutput::print::stage("Preprocessing file", path.relative_path().string());
 
     ExternalResource::Info info;
-    info.fileName  = std::filesystem::canonical(path).string();
+    info.fileName = std::filesystem::canonical(path).string();
     info.lineCount = m_data.back().line;
     ExternalResource::get().addInfo(std::move(info));
 
@@ -78,7 +79,7 @@ void Preprocessor::run(const std::filesystem::path& path, const CLI& cli) {
                 }
                 else if (line.at(1).value == ID::Include) {
                     auto currentLine = line.back().line - 1;
-                    auto filePath    = getPath(line.at(3).value);
+                    auto filePath = getPath(line.at(3).value);
 
                     if (std::filesystem::is_regular_file(filePath) && !ExternalResource::get().isLoaded(filePath)) {
                         auto tokens = ExternalResource::get().load(filePath, cli);

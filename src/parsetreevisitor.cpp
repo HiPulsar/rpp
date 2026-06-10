@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -20,6 +20,7 @@
 // IN THE SOFTWARE.
 //
 #include <parsetreevisitor.hpp>
+
 #include <token.hpp>
 #include <tokenliterals.hpp>
 
@@ -46,21 +47,21 @@ std::unique_ptr<Error> PTStatementVisitor::parse(PTExprStatement& node) {
     else if (node.get<1>()->hasKW(KW::Insert)) {
         if (node.get<1>()->id() == ExpressionID::MemberAccess) {
             if ((node.get<1>()->hasKW(KW::Nocopy))
-                || (node.get<1>()->hasKW(KW::Newrule) || (node.get<1>()->hasKW(KW::Rule) && node.get<1>()->hasKW(KW::Nodefault)))) {} // valid
+                || (node.get<1>()->hasKW(KW::Newrule) || (node.get<1>()->hasKW(KW::Rule) && node.get<1>()->hasKW(KW::Nodefault)))) {
+            } // valid
             else {
                 return std::make_unique<ErrInvalidExpression>(node.get<1>()->getTokens());
             }
         }
         else if (node.get<1>()->id() == ExpressionID::Assignment) {
-            if ((node.get<1>()->hasKW(KW::Automapper))
-                || (node.get<1>()->hasKW(KW::Newrun))
+            if ((node.get<1>()->hasKW(KW::Automapper)) || (node.get<1>()->hasKW(KW::Newrun))
                 || (node.get<1>()->hasKW(KW::Rule)
-                    && (node.get<1>()->hasKW(KW::Random)
-                        || (node.get<1>()->hasKW(KW::Pos) && (node.get<1>()->hasKW(KW::Type)))
+                    && (node.get<1>()->hasKW(KW::Random) || (node.get<1>()->hasKW(KW::Pos) && (node.get<1>()->hasKW(KW::Type)))
                         || (node.get<1>()->hasKW(KW::Pos) && (node.get<1>()->hasKW(KW::Index)))
                         || (node.get<1>()->hasKW(KW::Pos) && (node.get<1>()->hasKW(KW::Operator)))
                         || (node.get<1>()->hasKW(KW::Pos) && (node.get<1>()->hasKW(KW::Group)))
-                        || node.get<1>()->hasKW(KW::Pos)))
+                        || (node.get<1>()->hasKW(KW::Modulo) && (node.get<1>()->hasKW(KW::Pos)))
+                        || node.get<1>()->hasKW(KW::Pos) || node.get<1>()->hasKW(KW::Modulo)))
                 || node.get<1>()->hasKW(KW::Index)) {} // valid
             else {
                 return std::make_unique<ErrInvalidExpression>(node.get<1>()->getTokens());
@@ -145,12 +146,9 @@ std::unique_ptr<Error> PTStatementVisitor::parse(PTIfStatement& node) {
 
     if ((exprLastToken->cat == TIdentifier)
         || (exprLastToken->cat == TKeyword && (exprLastToken->value == KW::False || exprLastToken->value == KW::True))
-        || (node.get<3>()->id() == ExpressionID::Comparison)
-        || (node.get<3>()->id() == ExpressionID::Logical)
-        || (node.get<3>()->id() == ExpressionID::UnaryLogical)
-        || (node.get<3>()->id() == ExpressionID::FunctionCall)
-        || (node.get<3>()->id() == ExpressionID::MemberAccess)
-        || (node.get<3>()->id() == ExpressionID::ArraySubscript)) {} // valid
+        || (node.get<3>()->id() == ExpressionID::Comparison) || (node.get<3>()->id() == ExpressionID::Logical)
+        || (node.get<3>()->id() == ExpressionID::UnaryLogical) || (node.get<3>()->id() == ExpressionID::FunctionCall)
+        || (node.get<3>()->id() == ExpressionID::MemberAccess) || (node.get<3>()->id() == ExpressionID::ArraySubscript)) {} // valid
     else
         return std::make_unique<ErrInvalidExpression>(node.get<3>()->getTokens());
 
@@ -242,7 +240,8 @@ std::unique_ptr<Error> PTStatementVisitor::parse(PTFunctionDeclStatement& node) 
         return std::make_unique<ErrMissingToken>(*m_visitor->getCurrentToken(), PU::FunctionCallClose);
 
     // 3
-    if ((node.get<3>()->id() == ExpressionID::Empty) || (node.get<3>()->hasOnlyNodes({ ExpressionID::DeclType }, { ExpressionID::Separator }))) {} // valid
+    if ((node.get<3>()->id() == ExpressionID::Empty) || (node.get<3>()->hasOnlyNodes({ ExpressionID::DeclType }, { ExpressionID::Separator }))) {
+    } // valid
     else
         return std::make_unique<ErrInvalidExpression>(node.get<3>()->getTokens());
     m_visitor->setCurrentToken(node.get<4>());
@@ -289,8 +288,7 @@ std::unique_ptr<Error> PTStatementVisitor::parse(PTNestedFunctionDefStatement& n
 
 std::unique_ptr<Error> PTStatementVisitor::parse(PTNestedFunctionDeclStatement& node) {
     // 1
-    if ((node.get<1>()->id() == ExpressionID::MemberAccess)
-        && (node.get<1>()->hasOnlyNodes({ ExpressionID::MemberAccess, ExpressionID::Identifier }, {}))
+    if ((node.get<1>()->id() == ExpressionID::MemberAccess) && (node.get<1>()->hasOnlyNodes({ ExpressionID::MemberAccess, ExpressionID::Identifier }, {}))
         && (static_cast<PTMemberAccessExpression*>(node.get<1>().get())->get<1>()->id() == ExpressionID::Identifier)
         && (static_cast<PTMemberAccessExpression*>(node.get<1>().get())->get<3>()->id() == ExpressionID::Identifier)) {} // valid
     else if (node.get<1>()->id() == ExpressionID::Empty)
@@ -309,7 +307,8 @@ std::unique_ptr<Error> PTStatementVisitor::parse(PTNestedFunctionDeclStatement& 
         return std::make_unique<ErrMissingToken>(*m_visitor->getCurrentToken(), PU::FunctionCallClose);
 
     // 3
-    if ((node.get<3>()->id() == ExpressionID::Empty) || (node.get<3>()->hasOnlyNodes({ ExpressionID::DeclType }, { ExpressionID::Separator }))) {} // valid
+    if ((node.get<3>()->id() == ExpressionID::Empty) || (node.get<3>()->hasOnlyNodes({ ExpressionID::DeclType }, { ExpressionID::Separator }))) {
+    } // valid
     else
         return std::make_unique<ErrInvalidExpression>(node.get<3>()->getTokens());
     m_visitor->setCurrentToken(node.get<4>());
@@ -333,7 +332,8 @@ std::unique_ptr<Error> PTStatementVisitor::parse(PTNestedDeclStatement& node) {
         return std::make_unique<ErrMissingToken>(*m_visitor->getCurrentToken(), PU::FunctionCallClose);
 
     // 3
-    if ((node.get<3>()->id() == ExpressionID::Empty) || (node.get<3>()->hasOnlyNodes({ ExpressionID::Identifier }, { ExpressionID::Separator }))) {} // valid
+    if ((node.get<3>()->id() == ExpressionID::Empty) || (node.get<3>()->hasOnlyNodes({ ExpressionID::Identifier }, { ExpressionID::Separator }))) {
+    } // valid
     else
         return std::make_unique<ErrInvalidExpression>(node.get<3>()->getTokens());
     m_visitor->setCurrentToken(node.get<4>());
@@ -347,27 +347,16 @@ std::unique_ptr<Error> PTStatementVisitor::parse(PTReturnStatement& node) {
     // 2
     Token* exprLastToken = node.get<2>()->getLastToken();
 
-    if ((node.get<2>()->id() == ExpressionID::Empty)
-        || (node.get<2>()->id() == ExpressionID::Literal)
-        || (exprLastToken->cat == TIdentifier)
+    if ((node.get<2>()->id() == ExpressionID::Empty) || (node.get<2>()->id() == ExpressionID::Literal) || (exprLastToken->cat == TIdentifier)
         || (exprLastToken->cat == TKeyword
-            && (exprLastToken->value == KW::Anchor
-                || exprLastToken->value == KW::Count
-                || exprLastToken->value == KW::False
-                || exprLastToken->value == KW::Last
-                || exprLastToken->value == KW::Pos
-                || exprLastToken->value == KW::True))
-        || (node.get<2>()->id() == ExpressionID::Arithmetic)
-        || (node.get<2>()->id() == ExpressionID::Comparison)
-        || (node.get<2>()->id() == ExpressionID::Logical)
-        || (node.get<2>()->id() == ExpressionID::UnaryLogical)
+            && (exprLastToken->value == KW::Anchor || exprLastToken->value == KW::Count || exprLastToken->value == KW::False
+                || exprLastToken->value == KW::Last || exprLastToken->value == KW::Pos || exprLastToken->value == KW::True))
+        || (node.get<2>()->id() == ExpressionID::Arithmetic) || (node.get<2>()->id() == ExpressionID::Comparison)
+        || (node.get<2>()->id() == ExpressionID::Logical) || (node.get<2>()->id() == ExpressionID::UnaryLogical)
         || (node.get<2>()->id() == ExpressionID::FunctionCall && (!node.get<2>()->hasKW(KW::Invoke)))
-        || (node.get<2>()->id() == ExpressionID::MemberAccess)
-        || (node.get<2>()->id() == ExpressionID::ArraySubscript)
-        || (node.get<2>()->id() == ExpressionID::PercentLiteral)
-        || (node.get<2>()->id() == ExpressionID::StringLiteral)
-        || (node.get<2>()->id() == ExpressionID::RangeLiteral)
-        || (node.get<2>()->id() == ExpressionID::CoordLiteral)) {} // valid
+        || (node.get<2>()->id() == ExpressionID::MemberAccess) || (node.get<2>()->id() == ExpressionID::ArraySubscript)
+        || (node.get<2>()->id() == ExpressionID::PercentLiteral) || (node.get<2>()->id() == ExpressionID::StringLiteral)
+        || (node.get<2>()->id() == ExpressionID::RangeLiteral) || (node.get<2>()->id() == ExpressionID::CoordLiteral)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<2>()->getTokens());
     }
@@ -523,16 +512,10 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTAssignmentExpression& node) 
 
     if ((leftLastToken->cat == TIdentifier)
         || (leftLastToken->cat == TKeyword
-            && (leftLastToken->value == KW::Automapper
-                || leftLastToken->value == KW::Group
-                || leftLastToken->value == KW::Index
-                || leftLastToken->value == KW::Newrun
-                || leftLastToken->value == KW::Operator
-                || leftLastToken->value == KW::Pos
-                || leftLastToken->value == KW::Random
-                || leftLastToken->value == KW::Type))
-        || (node.get<1>()->id() == ExpressionID::MemberAccess)
-        || (node.get<1>()->id() == ExpressionID::ArraySubscript)
+            && (leftLastToken->value == KW::Automapper || leftLastToken->value == KW::Group
+                || leftLastToken->value == KW::Index || leftLastToken->value == KW::Newrun || leftLastToken->value == KW::Operator
+                || leftLastToken->value == KW::Pos || leftLastToken->value == KW::Random || leftLastToken->value == KW::Type))
+        || (node.get<1>()->id() == ExpressionID::MemberAccess) || (node.get<1>()->id() == ExpressionID::ArraySubscript)
         || (node.get<1>()->id() == ExpressionID::DeclType)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<1>()->getTokens());
@@ -549,30 +532,19 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTAssignmentExpression& node) 
 
     if ((node.get<3>()->id() == ExpressionID::Literal)
         || (node.get<3>()->id() == ExpressionID::Keyword
-            && (node.get<3>()->getLastToken()->value == KW::Empty
-                || node.get<3>()->getLastToken()->value == KW::False
-                || node.get<3>()->getLastToken()->value == KW::Full
-                || node.get<3>()->getLastToken()->value == KW::Index
-                || node.get<3>()->getLastToken()->value == KW::Notindex
-                || node.get<3>()->getLastToken()->value == KW::True))
+            && (node.get<3>()->getLastToken()->value == KW::Empty || node.get<3>()->getLastToken()->value == KW::False
+                || node.get<3>()->getLastToken()->value == KW::Full || node.get<3>()->getLastToken()->value == KW::Index
+                || node.get<3>()->getLastToken()->value == KW::Notindex || node.get<3>()->getLastToken()->value == KW::True))
         || (rightLastToken->cat == TIdentifier)
         || (rightLastToken->cat == TKeyword
-            && (rightLastToken->value == KW::Anchor
-                || rightLastToken->value == KW::Count
-                || rightLastToken->value == KW::Last
-                || rightLastToken->value == KW::Pos))
-        || (node.get<3>()->id() == ExpressionID::Assignment)
-        || (node.get<3>()->id() == ExpressionID::Arithmetic)
-        || (node.get<3>()->id() == ExpressionID::Comparison)
-        || (node.get<3>()->id() == ExpressionID::Logical)
-        || (node.get<3>()->id() == ExpressionID::UnaryLogical)
-        || (node.get<3>()->id() == ExpressionID::FunctionCall)
-        || (node.get<3>()->id() == ExpressionID::ForRange)
-        || (node.get<3>()->id() == ExpressionID::MemberAccess)
-        || (node.get<3>()->id() == ExpressionID::ArraySubscript)
-        || (node.get<3>()->id() == ExpressionID::PercentLiteral)
-        || (node.get<3>()->id() == ExpressionID::StringLiteral)
-        || (node.get<3>()->id() == ExpressionID::CoordLiteral)
+            && (rightLastToken->value == KW::Anchor || rightLastToken->value == KW::Count
+                || rightLastToken->value == KW::Last || rightLastToken->value == KW::Pos))
+        || (node.get<3>()->id() == ExpressionID::Assignment) || (node.get<3>()->id() == ExpressionID::Arithmetic)
+        || (node.get<3>()->id() == ExpressionID::Comparison) || (node.get<3>()->id() == ExpressionID::Logical)
+        || (node.get<3>()->id() == ExpressionID::UnaryLogical) || (node.get<3>()->id() == ExpressionID::FunctionCall)
+        || (node.get<3>()->id() == ExpressionID::ForRange) || (node.get<3>()->id() == ExpressionID::MemberAccess)
+        || (node.get<3>()->id() == ExpressionID::ArraySubscript) || (node.get<3>()->id() == ExpressionID::PercentLiteral)
+        || (node.get<3>()->id() == ExpressionID::StringLiteral) || (node.get<3>()->id() == ExpressionID::CoordLiteral)
         || (node.get<3>()->id() == ExpressionID::RangeLiteral)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<3>()->getTokens());
@@ -591,21 +563,14 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTArithmeticExpression& node) 
     if (node.get<1>()->id() == ExpressionID::Empty)
         return std::make_unique<ErrMissingExpression>(node.getTokens());
 
-    if ((node.get<1>()->id() == ExpressionID::Literal)
-        || (leftLastToken->cat == TIdentifier)
+    if ((node.get<1>()->id() == ExpressionID::Literal) || (leftLastToken->cat == TIdentifier)
         || (leftLastToken->cat == TKeyword
-            && (leftLastToken->value == KW::Anchor
-                || leftLastToken->value == KW::Count
-                || leftLastToken->value == KW::Pos
-                || leftLastToken->value == KW::Last))
-        || (node.get<1>()->id() == ExpressionID::Arithmetic)
-        || (node.get<1>()->id() == ExpressionID::FunctionCall)
-        || (node.get<1>()->id() == ExpressionID::MemberAccess)
-        || (node.get<1>()->id() == ExpressionID::ArraySubscript)
-        || (node.get<1>()->id() == ExpressionID::PercentLiteral)
-        || (node.get<1>()->id() == ExpressionID::StringLiteral)
-        || (node.get<1>()->id() == ExpressionID::RangeLiteral)
-        || (node.get<1>()->id() == ExpressionID::CoordLiteral)) {} // valid
+            && (leftLastToken->value == KW::Anchor || leftLastToken->value == KW::Count
+                || leftLastToken->value == KW::Pos || leftLastToken->value == KW::Last))
+        || (node.get<1>()->id() == ExpressionID::Arithmetic) || (node.get<1>()->id() == ExpressionID::FunctionCall)
+        || (node.get<1>()->id() == ExpressionID::MemberAccess) || (node.get<1>()->id() == ExpressionID::ArraySubscript)
+        || (node.get<1>()->id() == ExpressionID::PercentLiteral) || (node.get<1>()->id() == ExpressionID::StringLiteral)
+        || (node.get<1>()->id() == ExpressionID::RangeLiteral) || (node.get<1>()->id() == ExpressionID::CoordLiteral)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<1>()->getTokens());
     }
@@ -619,21 +584,14 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTArithmeticExpression& node) 
     if (node.get<3>()->id() == ExpressionID::Empty)
         return std::make_unique<ErrMissingExpression>(node.getTokens());
 
-    if ((node.get<3>()->id() == ExpressionID::Literal)
-        || (rightLastToken->cat == TIdentifier)
+    if ((node.get<3>()->id() == ExpressionID::Literal) || (rightLastToken->cat == TIdentifier)
         || (rightLastToken->cat == TKeyword
-            && (rightLastToken->value == KW::Anchor
-                || rightLastToken->value == KW::Count
-                || rightLastToken->value == KW::Pos
-                || rightLastToken->value == KW::Last))
-        || (node.get<3>()->id() == ExpressionID::Arithmetic)
-        || (node.get<3>()->id() == ExpressionID::FunctionCall)
-        || (node.get<3>()->id() == ExpressionID::MemberAccess)
-        || (node.get<3>()->id() == ExpressionID::ArraySubscript)
-        || (node.get<3>()->id() == ExpressionID::PercentLiteral)
-        || (node.get<3>()->id() == ExpressionID::StringLiteral)
-        || (node.get<3>()->id() == ExpressionID::RangeLiteral)
-        || (node.get<3>()->id() == ExpressionID::CoordLiteral)) {} // valid
+            && (rightLastToken->value == KW::Anchor || rightLastToken->value == KW::Count
+                || rightLastToken->value == KW::Pos || rightLastToken->value == KW::Last))
+        || (node.get<3>()->id() == ExpressionID::Arithmetic) || (node.get<3>()->id() == ExpressionID::FunctionCall)
+        || (node.get<3>()->id() == ExpressionID::MemberAccess) || (node.get<3>()->id() == ExpressionID::ArraySubscript)
+        || (node.get<3>()->id() == ExpressionID::PercentLiteral) || (node.get<3>()->id() == ExpressionID::StringLiteral)
+        || (node.get<3>()->id() == ExpressionID::RangeLiteral) || (node.get<3>()->id() == ExpressionID::CoordLiteral)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<3>()->getTokens());
     }
@@ -651,23 +609,14 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTComparisonExpression& node) 
     if (node.get<1>()->id() == ExpressionID::Empty)
         return std::make_unique<ErrMissingExpression>(node.getTokens());
 
-    if ((node.get<1>()->id() == ExpressionID::Literal)
-        || (leftLastToken->cat == TIdentifier)
+    if ((node.get<1>()->id() == ExpressionID::Literal) || (leftLastToken->cat == TIdentifier)
         || (leftLastToken->cat == TKeyword
-            && (leftLastToken->value == KW::Anchor
-                || leftLastToken->value == KW::Count
-                || leftLastToken->value == KW::False
-                || leftLastToken->value == KW::Last
-                || leftLastToken->value == KW::Pos
-                || leftLastToken->value == KW::True))
-        || (node.get<1>()->id() == ExpressionID::Arithmetic)
-        || (node.get<1>()->id() == ExpressionID::FunctionCall)
-        || (node.get<1>()->id() == ExpressionID::MemberAccess)
-        || (node.get<1>()->id() == ExpressionID::ArraySubscript)
-        || (node.get<1>()->id() == ExpressionID::PercentLiteral)
-        || (node.get<1>()->id() == ExpressionID::StringLiteral)
-        || (node.get<1>()->id() == ExpressionID::RangeLiteral)
-        || (node.get<1>()->id() == ExpressionID::CoordLiteral)) {} // valid
+            && (leftLastToken->value == KW::Anchor || leftLastToken->value == KW::Count || leftLastToken->value == KW::False
+                || leftLastToken->value == KW::Last || leftLastToken->value == KW::Pos || leftLastToken->value == KW::True))
+        || (node.get<1>()->id() == ExpressionID::Arithmetic) || (node.get<1>()->id() == ExpressionID::FunctionCall)
+        || (node.get<1>()->id() == ExpressionID::MemberAccess) || (node.get<1>()->id() == ExpressionID::ArraySubscript)
+        || (node.get<1>()->id() == ExpressionID::PercentLiteral) || (node.get<1>()->id() == ExpressionID::StringLiteral)
+        || (node.get<1>()->id() == ExpressionID::RangeLiteral) || (node.get<1>()->id() == ExpressionID::CoordLiteral)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<1>()->getTokens());
     }
@@ -681,23 +630,14 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTComparisonExpression& node) 
     if (node.get<3>()->id() == ExpressionID::Empty)
         return std::make_unique<ErrMissingExpression>(node.getTokens());
 
-    if ((node.get<3>()->id() == ExpressionID::Literal)
-        || (rightLastToken->cat == TIdentifier)
+    if ((node.get<3>()->id() == ExpressionID::Literal) || (rightLastToken->cat == TIdentifier)
         || (rightLastToken->cat == TKeyword
-            && (rightLastToken->value == KW::Anchor
-                || rightLastToken->value == KW::Count
-                || rightLastToken->value == KW::False
-                || rightLastToken->value == KW::Last
-                || rightLastToken->value == KW::Pos
-                || rightLastToken->value == KW::True))
-        || (node.get<3>()->id() == ExpressionID::Arithmetic)
-        || (node.get<3>()->id() == ExpressionID::FunctionCall)
-        || (node.get<3>()->id() == ExpressionID::MemberAccess)
-        || (node.get<3>()->id() == ExpressionID::ArraySubscript)
-        || (node.get<3>()->id() == ExpressionID::PercentLiteral)
-        || (node.get<3>()->id() == ExpressionID::StringLiteral)
-        || (node.get<3>()->id() == ExpressionID::RangeLiteral)
-        || (node.get<3>()->id() == ExpressionID::CoordLiteral)) {} // valid
+            && (rightLastToken->value == KW::Anchor || rightLastToken->value == KW::Count || rightLastToken->value == KW::False
+                || rightLastToken->value == KW::Last || rightLastToken->value == KW::Pos || rightLastToken->value == KW::True))
+        || (node.get<3>()->id() == ExpressionID::Arithmetic) || (node.get<3>()->id() == ExpressionID::FunctionCall)
+        || (node.get<3>()->id() == ExpressionID::MemberAccess) || (node.get<3>()->id() == ExpressionID::ArraySubscript)
+        || (node.get<3>()->id() == ExpressionID::PercentLiteral) || (node.get<3>()->id() == ExpressionID::StringLiteral)
+        || (node.get<3>()->id() == ExpressionID::RangeLiteral) || (node.get<3>()->id() == ExpressionID::CoordLiteral)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<3>()->getTokens());
     }
@@ -717,12 +657,9 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTLogicalExpression& node) {
 
     if ((leftLastToken->cat == TIdentifier)
         || (leftLastToken->cat == TKeyword && (leftLastToken->value == KW::False || leftLastToken->value == KW::True))
-        || (node.get<1>()->id() == ExpressionID::Comparison)
-        || (node.get<1>()->id() == ExpressionID::Logical)
-        || (node.get<1>()->id() == ExpressionID::UnaryLogical)
-        || (node.get<1>()->id() == ExpressionID::FunctionCall)
-        || (node.get<1>()->id() == ExpressionID::MemberAccess)
-        || (node.get<1>()->id() == ExpressionID::ArraySubscript)) {} // valid
+        || (node.get<1>()->id() == ExpressionID::Comparison) || (node.get<1>()->id() == ExpressionID::Logical)
+        || (node.get<1>()->id() == ExpressionID::UnaryLogical) || (node.get<1>()->id() == ExpressionID::FunctionCall)
+        || (node.get<1>()->id() == ExpressionID::MemberAccess) || (node.get<1>()->id() == ExpressionID::ArraySubscript)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<1>()->getTokens());
     }
@@ -738,12 +675,9 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTLogicalExpression& node) {
 
     if ((rightLastToken->cat == TIdentifier)
         || (rightLastToken->cat == TKeyword && (rightLastToken->value == KW::False || rightLastToken->value == KW::True))
-        || (node.get<3>()->id() == ExpressionID::Comparison)
-        || (node.get<3>()->id() == ExpressionID::Logical)
-        || (node.get<3>()->id() == ExpressionID::UnaryLogical)
-        || (node.get<3>()->id() == ExpressionID::FunctionCall)
-        || (node.get<3>()->id() == ExpressionID::MemberAccess)
-        || (node.get<3>()->id() == ExpressionID::ArraySubscript)) {} // valid
+        || (node.get<3>()->id() == ExpressionID::Comparison) || (node.get<3>()->id() == ExpressionID::Logical)
+        || (node.get<3>()->id() == ExpressionID::UnaryLogical) || (node.get<3>()->id() == ExpressionID::FunctionCall)
+        || (node.get<3>()->id() == ExpressionID::MemberAccess) || (node.get<3>()->id() == ExpressionID::ArraySubscript)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<3>()->getTokens());
     }
@@ -765,12 +699,9 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTUnaryLogicalExpression& node
 
     if ((exprLastToken->cat == TIdentifier)
         || (exprLastToken->cat == TKeyword && (exprLastToken->value == KW::False || exprLastToken->value == KW::True))
-        || (node.get<2>()->id() == ExpressionID::Comparison)
-        || (node.get<2>()->id() == ExpressionID::Logical)
-        || (node.get<2>()->id() == ExpressionID::UnaryLogical)
-        || (node.get<2>()->id() == ExpressionID::FunctionCall)
-        || (node.get<2>()->id() == ExpressionID::MemberAccess)
-        || (node.get<2>()->id() == ExpressionID::ArraySubscript)) {} // valid
+        || (node.get<2>()->id() == ExpressionID::Comparison) || (node.get<2>()->id() == ExpressionID::Logical)
+        || (node.get<2>()->id() == ExpressionID::UnaryLogical) || (node.get<2>()->id() == ExpressionID::FunctionCall)
+        || (node.get<2>()->id() == ExpressionID::MemberAccess) || (node.get<2>()->id() == ExpressionID::ArraySubscript)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<2>()->getTokens());
     }
@@ -816,28 +747,18 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTFunctionCallExpression& node
     else {
         Token* exprLastToken = node.get<3>()->getLastToken();
 
-        if ((node.get<3>()->id() == ExpressionID::Empty)
-            || (node.get<3>()->id() == ExpressionID::Literal)
+        if ((node.get<3>()->id() == ExpressionID::Empty) || (node.get<3>()->id() == ExpressionID::Literal)
             || (exprLastToken->cat == TIdentifier)
             || (exprLastToken->cat == TKeyword
-                && (exprLastToken->value == KW::Anchor
-                    || exprLastToken->value == KW::Count
-                    || exprLastToken->value == KW::False
-                    || exprLastToken->value == KW::Last
-                    || exprLastToken->value == KW::Pos
-                    || exprLastToken->value == KW::True))
-            || (node.get<3>()->id() == ExpressionID::Arithmetic)
-            || (node.get<3>()->id() == ExpressionID::Comparison)
-            || (node.get<3>()->id() == ExpressionID::Logical)
-            || (node.get<3>()->id() == ExpressionID::UnaryLogical)
-            || (node.get<3>()->id() == ExpressionID::FunctionCall)
-            || (node.get<3>()->id() == ExpressionID::MemberAccess)
-            || (node.get<3>()->id() == ExpressionID::ArraySubscript)
-            || (node.get<3>()->id() == ExpressionID::PercentLiteral)
-            || (node.get<3>()->id() == ExpressionID::StringLiteral)
-            || (node.get<3>()->id() == ExpressionID::RangeLiteral)
-            || (node.get<3>()->id() == ExpressionID::CoordLiteral)
-            || (node.get<3>()->id() == ExpressionID::Separator && (node.get<1>() != nullptr))) {} // valid
+                && (exprLastToken->value == KW::Anchor || exprLastToken->value == KW::Count || exprLastToken->value == KW::False
+                    || exprLastToken->value == KW::Last || exprLastToken->value == KW::Pos || exprLastToken->value == KW::True))
+            || (node.get<3>()->id() == ExpressionID::Arithmetic) || (node.get<3>()->id() == ExpressionID::Comparison)
+            || (node.get<3>()->id() == ExpressionID::Logical) || (node.get<3>()->id() == ExpressionID::UnaryLogical)
+            || (node.get<3>()->id() == ExpressionID::FunctionCall) || (node.get<3>()->id() == ExpressionID::MemberAccess)
+            || (node.get<3>()->id() == ExpressionID::ArraySubscript) || (node.get<3>()->id() == ExpressionID::PercentLiteral)
+            || (node.get<3>()->id() == ExpressionID::StringLiteral) || (node.get<3>()->id() == ExpressionID::RangeLiteral)
+            || (node.get<3>()->id() == ExpressionID::CoordLiteral) || (node.get<3>()->id() == ExpressionID::Separator && (node.get<1>() != nullptr))) {
+        } // valid
         else {
             return std::make_unique<ErrInvalidExpression>(node.getTokens());
         }
@@ -872,13 +793,10 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTForRangeExpression& node) {
     if (node.get<3>()->id() == ExpressionID::Empty)
         return std::make_unique<ErrMissingExpression>(node.getTokens());
 
-    if ((node.get<3>()->id() == ExpressionID::Literal)
-        || (rightLastToken->cat == TIdentifier)
+    if ((node.get<3>()->id() == ExpressionID::Literal) || (rightLastToken->cat == TIdentifier)
         || (rightLastToken->cat == TKeyword && (rightLastToken->value == KW::Count || rightLastToken->value == KW::Last))
-        || (node.get<3>()->id() == ExpressionID::Arithmetic)
-        || (node.get<3>()->id() == ExpressionID::FunctionCall)
-        || (node.get<3>()->id() == ExpressionID::MemberAccess)
-        || (node.get<3>()->id() == ExpressionID::ArraySubscript)) {} // valid
+        || (node.get<3>()->id() == ExpressionID::Arithmetic) || (node.get<3>()->id() == ExpressionID::FunctionCall)
+        || (node.get<3>()->id() == ExpressionID::MemberAccess) || (node.get<3>()->id() == ExpressionID::ArraySubscript)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<3>()->getTokens());
     }
@@ -896,25 +814,15 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTMemberAccessExpression& node
     if (node.get<1>()->id() == ExpressionID::Empty)
         return std::make_unique<ErrMissingExpression>(node.getTokens());
 
-    if ((node.get<1>()->id() == ExpressionID::Literal)
-        || (leftLastToken->cat == TIdentifier)
+    if ((node.get<1>()->id() == ExpressionID::Literal) || (leftLastToken->cat == TIdentifier)
         || (leftLastToken->cat == TKeyword
-            && (leftLastToken->value == KW::Anchor
-                || leftLastToken->value == KW::Count
-                || leftLastToken->value == KW::False
-                || leftLastToken->value == KW::Index
-                || leftLastToken->value == KW::Insert
-                || leftLastToken->value == KW::Last
-                || leftLastToken->value == KW::Pos
-                || leftLastToken->value == KW::Rotate
-                || leftLastToken->value == KW::Rule
-                || leftLastToken->value == KW::True))
-        || (node.get<1>()->id() == ExpressionID::FunctionCall)
-        || (node.get<1>()->id() == ExpressionID::MemberAccess)
-        || (node.get<1>()->id() == ExpressionID::ArraySubscript)
-        || (node.get<1>()->id() == ExpressionID::RangeLiteral)
-        || (node.get<1>()->id() == ExpressionID::CoordLiteral)
-        || (node.get<1>()->id() == ExpressionID::StringLiteral)) {} // valid
+            && (leftLastToken->value == KW::Anchor || leftLastToken->value == KW::Count || leftLastToken->value == KW::False
+                || leftLastToken->value == KW::Index || leftLastToken->value == KW::Insert || leftLastToken->value == KW::Last
+                || leftLastToken->value == KW::Modulo || leftLastToken->value == KW::Pos || leftLastToken->value == KW::Rotate
+                || leftLastToken->value == KW::Rule || leftLastToken->value == KW::True))
+        || (node.get<1>()->id() == ExpressionID::FunctionCall) || (node.get<1>()->id() == ExpressionID::MemberAccess)
+        || (node.get<1>()->id() == ExpressionID::ArraySubscript) || (node.get<1>()->id() == ExpressionID::RangeLiteral)
+        || (node.get<1>()->id() == ExpressionID::CoordLiteral) || (node.get<1>()->id() == ExpressionID::StringLiteral)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.getTokens());
     }
@@ -930,25 +838,13 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTMemberAccessExpression& node
 
     if ((rightLastToken->cat == TIdentifier)
         || (rightLastToken->cat == TKeyword
-            && (rightLastToken->value == KW::Anchor
-                || rightLastToken->value == KW::Automapper
-                || rightLastToken->value == KW::Count
-                || rightLastToken->value == KW::Index
-                || rightLastToken->value == KW::Group
-                || rightLastToken->value == KW::Last
-                || rightLastToken->value == KW::Newrule
-                || rightLastToken->value == KW::Newrun
-                || rightLastToken->value == KW::Nocopy
-                || rightLastToken->value == KW::Nodefault
-                || rightLastToken->value == KW::Notindex
-                || rightLastToken->value == KW::Operator
-                || rightLastToken->value == KW::Pos
-                || rightLastToken->value == KW::Random
-                || rightLastToken->value == KW::Rotate
-                || rightLastToken->value == KW::Rule
-                || rightLastToken->value == KW::Type))
-        || (node.get<3>()->id() == ExpressionID::FunctionCall)
-        || (node.get<3>()->id() == ExpressionID::MemberAccess)
+            && (rightLastToken->value == KW::Anchor || rightLastToken->value == KW::Automapper || rightLastToken->value == KW::Count
+                || rightLastToken->value == KW::Index || rightLastToken->value == KW::Group || rightLastToken->value == KW::Last
+                || rightLastToken->value == KW::Modulo || rightLastToken->value == KW::Newrule || rightLastToken->value == KW::Newrun
+                || rightLastToken->value == KW::Nocopy || rightLastToken->value == KW::Nodefault || rightLastToken->value == KW::Notindex
+                || rightLastToken->value == KW::Operator || rightLastToken->value == KW::Pos || rightLastToken->value == KW::Random
+                || rightLastToken->value == KW::Rotate || rightLastToken->value == KW::Rule || rightLastToken->value == KW::Type))
+        || (node.get<3>()->id() == ExpressionID::FunctionCall) || (node.get<3>()->id() == ExpressionID::MemberAccess)
         || (node.get<3>()->id() == ExpressionID::ArraySubscript)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.getTokens());
@@ -967,13 +863,12 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTMemberAccessExpression& node
                           -> index
                           -> operator
                           -> group
+                   -> modulo -> pos
     */
     if (node.get<1>()->id() == ExpressionID::Keyword && leftLastToken->value == KW::Insert) {
         if ((node.get<3>()->id() == ExpressionID::Keyword
-             && (rightLastToken->value == KW::Automapper
-                 || rightLastToken->value == KW::Newrun
-                 || rightLastToken->value == KW::Newrule
-                 || rightLastToken->value == KW::Nocopy))) {} // valid
+             && (rightLastToken->value == KW::Automapper || rightLastToken->value == KW::Newrun
+                 || rightLastToken->value == KW::Newrule || rightLastToken->value == KW::Nocopy))) {} // valid
         else if (node.get<3>()->id() == ExpressionID::MemberAccess) {
             auto& right = static_cast<PTMemberAccessExpression&>(*node.get<3>());
             if ((right.get<1>()->id() == ExpressionID::Keyword && (right.get<1>()->getLastToken()->value == KW::Rule))) {} // valid
@@ -985,14 +880,13 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTMemberAccessExpression& node
     }
     else if (node.get<1>()->id() == ExpressionID::Keyword && leftLastToken->value == KW::Rule) {
         if ((node.get<3>()->id() == ExpressionID::Keyword
-             && (rightLastToken->value == KW::Nodefault
-                 || rightLastToken->value == KW::Random
-                 || rightLastToken->value == KW::Pos
-                 || rightLastToken->value == KW::Index))) {} // valid
+             && (rightLastToken->value == KW::Nodefault || rightLastToken->value == KW::Random || rightLastToken->value == KW::Pos
+                 || rightLastToken->value == KW::Modulo || rightLastToken->value == KW::Index))) {} // valid
         else if (node.get<3>()->id() == ExpressionID::MemberAccess) {
             auto& right = static_cast<PTMemberAccessExpression&>(*node.get<3>());
             if ((right.get<1>()->id() == ExpressionID::Keyword
-                 && (right.get<1>()->getLastToken()->value == KW::Pos || right.get<1>()->getLastToken()->value == KW::Index))) {} // valid
+                 && (right.get<1>()->getLastToken()->value == KW::Pos || right.get<1>()->getLastToken()->value == KW::Modulo))) {
+            } // valid
             else
                 return std::make_unique<ErrInvalidExpression>(node.getTokens());
         }
@@ -1001,16 +895,13 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTMemberAccessExpression& node
     }
     else if (node.get<1>()->id() == ExpressionID::Keyword && leftLastToken->value == KW::Pos) {
         if ((node.get<3>()->id() == ExpressionID::Keyword
-             && (rightLastToken->value == KW::Type
-                 || rightLastToken->value == KW::Index
-                 || rightLastToken->value == KW::Operator
-                 || rightLastToken->value == KW::Group))) {} // valid
-        else if (node.get<3>()->id() == ExpressionID::MemberAccess) {
-            auto& right = static_cast<PTMemberAccessExpression&>(*node.get<3>());
-            if ((right.get<1>()->id() == ExpressionID::Keyword && (right.get<1>()->getLastToken()->value == KW::Index))) {} // valid
-            else
-                return std::make_unique<ErrInvalidExpression>(node.getTokens());
-        }
+             && (rightLastToken->value == KW::Type || rightLastToken->value == KW::Index
+                 || rightLastToken->value == KW::Operator || rightLastToken->value == KW::Group))) {} // valid
+        else
+            return std::make_unique<ErrInvalidExpression>(node.getTokens());
+    }
+    else if (node.get<1>()->id() == ExpressionID::Keyword && leftLastToken->value == KW::Modulo) {
+        if (node.get<3>()->id() == ExpressionID::Keyword && rightLastToken->value == KW::Pos) {} // valid
         else
             return std::make_unique<ErrInvalidExpression>(node.getTokens());
     }
@@ -1023,10 +914,8 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTMemberAccessExpression& node
     }
 
     // literal.name()
-    if (((node.get<1>()->id() == ExpressionID::Literal
-          || node.get<1>()->id() == ExpressionID::RangeLiteral
-          || node.get<1>()->id() == ExpressionID::StringLiteral
-          || node.get<1>()->id() == ExpressionID::CoordLiteral)
+    if (((node.get<1>()->id() == ExpressionID::Literal || node.get<1>()->id() == ExpressionID::RangeLiteral
+          || node.get<1>()->id() == ExpressionID::StringLiteral || node.get<1>()->id() == ExpressionID::CoordLiteral)
          && (node.get<3>()->id() == ExpressionID::FunctionCall && node.get<3>()->getTokens()[0]->value == "name")))
         return std::make_unique<ErrInvalidExpression>(node.getTokens());
 
@@ -1053,12 +942,10 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTErrorExpression& node) {
     if (node.get<3>()->id() == ExpressionID::Empty)
         return std::make_unique<ErrMissingExpression>(node.getTokens());
 
-    if ((exprLastToken->cat == TIdentifier)
-        || (node.get<3>()->id() == ExpressionID::Arithmetic)
-        || (node.get<3>()->id() == ExpressionID::FunctionCall)
-        || (node.get<3>()->id() == ExpressionID::MemberAccess)
-        || (node.get<3>()->id() == ExpressionID::ArraySubscript)
-        || (node.get<3>()->id() == ExpressionID::StringLiteral)) {} // valid
+    if ((exprLastToken->cat == TIdentifier) || (node.get<3>()->id() == ExpressionID::Arithmetic)
+        || (node.get<3>()->id() == ExpressionID::FunctionCall) || (node.get<3>()->id() == ExpressionID::MemberAccess)
+        || (node.get<3>()->id() == ExpressionID::ArraySubscript) || (node.get<3>()->id() == ExpressionID::StringLiteral)) {
+    } // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<3>()->getTokens());
     }
@@ -1087,12 +974,10 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTWarningExpression& node) {
     if (node.get<3>()->id() == ExpressionID::Empty)
         return std::make_unique<ErrMissingExpression>(node.getTokens());
 
-    if ((exprLastToken->cat == TIdentifier)
-        || (node.get<3>()->id() == ExpressionID::Arithmetic)
-        || (node.get<3>()->id() == ExpressionID::FunctionCall)
-        || (node.get<3>()->id() == ExpressionID::MemberAccess)
-        || (node.get<3>()->id() == ExpressionID::ArraySubscript)
-        || (node.get<3>()->id() == ExpressionID::StringLiteral)) {} // valid
+    if ((exprLastToken->cat == TIdentifier) || (node.get<3>()->id() == ExpressionID::Arithmetic)
+        || (node.get<3>()->id() == ExpressionID::FunctionCall) || (node.get<3>()->id() == ExpressionID::MemberAccess)
+        || (node.get<3>()->id() == ExpressionID::ArraySubscript) || (node.get<3>()->id() == ExpressionID::StringLiteral)) {
+    } // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<3>()->getTokens());
     }
@@ -1123,12 +1008,9 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTAssertExpression& node) {
 
     if ((exprLastToken->cat == TIdentifier)
         || (node.get<3>()->id() == ExpressionID::Keyword && (exprLastToken->value == KW::False || exprLastToken->value == KW::True))
-        || (node.get<3>()->id() == ExpressionID::Comparison)
-        || (node.get<3>()->id() == ExpressionID::Logical)
-        || (node.get<3>()->id() == ExpressionID::UnaryLogical)
-        || (node.get<3>()->id() == ExpressionID::FunctionCall)
-        || (node.get<3>()->id() == ExpressionID::MemberAccess)
-        || (node.get<3>()->id() == ExpressionID::ArraySubscript)) {} // valid
+        || (node.get<3>()->id() == ExpressionID::Comparison) || (node.get<3>()->id() == ExpressionID::Logical)
+        || (node.get<3>()->id() == ExpressionID::UnaryLogical) || (node.get<3>()->id() == ExpressionID::FunctionCall)
+        || (node.get<3>()->id() == ExpressionID::MemberAccess) || (node.get<3>()->id() == ExpressionID::ArraySubscript)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<3>()->getTokens());
     }
@@ -1154,13 +1036,10 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTArraySubscriptExpression& no
     if (node.get<3>()->id() == ExpressionID::Empty)
         return std::make_unique<ErrMissingExpression>(node.getTokens());
 
-    if ((node.get<3>()->id() == ExpressionID::Literal)
-        || (exprLastToken->cat == TIdentifier)
+    if ((node.get<3>()->id() == ExpressionID::Literal) || (exprLastToken->cat == TIdentifier)
         || (exprLastToken->cat == TKeyword && (exprLastToken->value == KW::Count || exprLastToken->value == KW::Last))
-        || (node.get<3>()->id() == ExpressionID::Arithmetic)
-        || (node.get<3>()->id() == ExpressionID::FunctionCall)
-        || (node.get<3>()->id() == ExpressionID::MemberAccess)
-        || (node.get<3>()->id() == ExpressionID::ArraySubscript)
+        || (node.get<3>()->id() == ExpressionID::Arithmetic) || (node.get<3>()->id() == ExpressionID::FunctionCall)
+        || (node.get<3>()->id() == ExpressionID::MemberAccess) || (node.get<3>()->id() == ExpressionID::ArraySubscript)
         || (node.get<3>()->id() == ExpressionID::CoordLiteral)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<3>()->getTokens());
@@ -1204,11 +1083,9 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTRangeLiteralExpression& node
     if (node.get<1>()->id() == ExpressionID::Empty)
         return std::make_unique<ErrMissingExpression>(node.getTokens());
 
-    if ((node.get<1>()->id() == ExpressionID::Literal)
-        || (leftLastToken->cat == TIdentifier)
+    if ((node.get<1>()->id() == ExpressionID::Literal) || (leftLastToken->cat == TIdentifier)
         || (leftLastToken->cat == TKeyword && (leftLastToken->value == KW::Count || leftLastToken->value == KW::Last))
-        || (node.get<1>()->id() == ExpressionID::FunctionCall)
-        || (node.get<1>()->id() == ExpressionID::ArraySubscript)
+        || (node.get<1>()->id() == ExpressionID::FunctionCall) || (node.get<1>()->id() == ExpressionID::ArraySubscript)
         || (node.get<1>()->id() == ExpressionID::CoordLiteral)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<1>()->getTokens());
@@ -1223,11 +1100,9 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTRangeLiteralExpression& node
     if (node.get<3>()->id() == ExpressionID::Empty)
         return std::make_unique<ErrMissingExpression>(node.getTokens());
 
-    if ((node.get<3>()->id() == ExpressionID::Literal)
-        || (rightLastToken->cat == TIdentifier)
+    if ((node.get<3>()->id() == ExpressionID::Literal) || (rightLastToken->cat == TIdentifier)
         || (rightLastToken->cat == TKeyword && (rightLastToken->value == KW::Count || rightLastToken->value == KW::Last))
-        || (node.get<3>()->id() == ExpressionID::FunctionCall)
-        || (node.get<3>()->id() == ExpressionID::ArraySubscript)
+        || (node.get<3>()->id() == ExpressionID::FunctionCall) || (node.get<3>()->id() == ExpressionID::ArraySubscript)
         || (node.get<3>()->id() == ExpressionID::CoordLiteral)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<3>()->getTokens());
@@ -1246,12 +1121,9 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTCoordLiteralExpression& node
         return std::make_unique<ErrMissingExpression>(node.getTokens());
 
     if ((node.get<2>()->id() == ExpressionID::Separator
-         && (node.get<2>()->hasNode(ExpressionID::Literal)
-             || node.get<2>()->hasNode(ExpressionID::Identifier)
-             || node.get<2>()->hasNode(ExpressionID::Keyword)
-             || node.get<2>()->hasNode(ExpressionID::Arithmetic)
-             || node.get<2>()->hasNode(ExpressionID::FunctionCall)
-             || node.get<2>()->hasNode(ExpressionID::MemberAccess)
+         && (node.get<2>()->hasNode(ExpressionID::Literal) || node.get<2>()->hasNode(ExpressionID::Identifier)
+             || node.get<2>()->hasNode(ExpressionID::Keyword) || node.get<2>()->hasNode(ExpressionID::Arithmetic)
+             || node.get<2>()->hasNode(ExpressionID::FunctionCall) || node.get<2>()->hasNode(ExpressionID::MemberAccess)
              || node.get<2>()->hasNode(ExpressionID::ArraySubscript)))
         && (static_cast<PTSeparatorExpression*>(node.get<2>().get())->get<3>()->id() != ExpressionID::Separator)) {} // valid
     else
@@ -1272,28 +1144,17 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTSeparatorExpression& node) {
     if (node.get<1>()->id() == ExpressionID::Empty)
         return std::make_unique<ErrMissingExpression>(node.getTokens());
 
-    if ((node.get<1>()->id() == ExpressionID::Literal)
-        || (leftLastToken->cat == TIdentifier)
+    if ((node.get<1>()->id() == ExpressionID::Literal) || (leftLastToken->cat == TIdentifier)
         || (leftLastToken->cat == TKeyword
-            && (leftLastToken->value == KW::Anchor
-                || leftLastToken->value == KW::Count
-                || leftLastToken->value == KW::False
-                || leftLastToken->value == KW::Last
-                || leftLastToken->value == KW::Pos
-                || leftLastToken->value == KW::True))
+            && (leftLastToken->value == KW::Anchor || leftLastToken->value == KW::Count || leftLastToken->value == KW::False
+                || leftLastToken->value == KW::Last || leftLastToken->value == KW::Pos || leftLastToken->value == KW::True))
         || (node.get<1>()->id() == ExpressionID::Assignment && (node.get<1>()->hasNode(ExpressionID::DeclType)))
-        || (node.get<1>()->id() == ExpressionID::Arithmetic)
-        || (node.get<1>()->id() == ExpressionID::Comparison)
-        || (node.get<1>()->id() == ExpressionID::Logical)
-        || (node.get<1>()->id() == ExpressionID::UnaryLogical)
-        || (node.get<1>()->id() == ExpressionID::FunctionCall)
-        || (node.get<1>()->id() == ExpressionID::MemberAccess)
-        || (node.get<1>()->id() == ExpressionID::ArraySubscript)
-        || (node.get<1>()->id() == ExpressionID::PercentLiteral)
-        || (node.get<1>()->id() == ExpressionID::StringLiteral)
-        || (node.get<1>()->id() == ExpressionID::RangeLiteral)
-        || (node.get<1>()->id() == ExpressionID::CoordLiteral)
-        || (node.get<1>()->id() == ExpressionID::DeclType)) {} // valid
+        || (node.get<1>()->id() == ExpressionID::Arithmetic) || (node.get<1>()->id() == ExpressionID::Comparison)
+        || (node.get<1>()->id() == ExpressionID::Logical) || (node.get<1>()->id() == ExpressionID::UnaryLogical)
+        || (node.get<1>()->id() == ExpressionID::FunctionCall) || (node.get<1>()->id() == ExpressionID::MemberAccess)
+        || (node.get<1>()->id() == ExpressionID::ArraySubscript) || (node.get<1>()->id() == ExpressionID::PercentLiteral)
+        || (node.get<1>()->id() == ExpressionID::StringLiteral) || (node.get<1>()->id() == ExpressionID::RangeLiteral)
+        || (node.get<1>()->id() == ExpressionID::CoordLiteral) || (node.get<1>()->id() == ExpressionID::DeclType)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<1>()->getTokens());
     }
@@ -1307,29 +1168,17 @@ std::unique_ptr<Error> PTExpressionVisitor::parse(PTSeparatorExpression& node) {
     if (node.get<3>()->id() == ExpressionID::Empty)
         return std::make_unique<ErrMissingExpression>(node.getTokens());
 
-    if ((node.get<3>()->id() == ExpressionID::Literal)
-        || (rightLastToken->cat == TIdentifier)
+    if ((node.get<3>()->id() == ExpressionID::Literal) || (rightLastToken->cat == TIdentifier)
         || (rightLastToken->cat == TKeyword
-            && (rightLastToken->value == KW::Anchor
-                || rightLastToken->value == KW::Count
-                || rightLastToken->value == KW::False
-                || rightLastToken->value == KW::Last
-                || rightLastToken->value == KW::Pos
-                || rightLastToken->value == KW::True))
-        || (node.get<3>()->id() == ExpressionID::Assignment)
-        || (node.get<3>()->id() == ExpressionID::Arithmetic)
-        || (node.get<3>()->id() == ExpressionID::Comparison)
-        || (node.get<3>()->id() == ExpressionID::Logical)
-        || (node.get<3>()->id() == ExpressionID::UnaryLogical)
-        || (node.get<3>()->id() == ExpressionID::FunctionCall)
-        || (node.get<3>()->id() == ExpressionID::MemberAccess)
-        || (node.get<3>()->id() == ExpressionID::ArraySubscript)
-        || (node.get<3>()->id() == ExpressionID::PercentLiteral)
-        || (node.get<3>()->id() == ExpressionID::StringLiteral)
-        || (node.get<3>()->id() == ExpressionID::RangeLiteral)
-        || (node.get<3>()->id() == ExpressionID::CoordLiteral)
-        || (node.get<3>()->id() == ExpressionID::Separator)
-        || (node.get<3>()->id() == ExpressionID::DeclType)) {} // valid
+            && (rightLastToken->value == KW::Anchor || rightLastToken->value == KW::Count || rightLastToken->value == KW::False
+                || rightLastToken->value == KW::Last || rightLastToken->value == KW::Pos || rightLastToken->value == KW::True))
+        || (node.get<3>()->id() == ExpressionID::Assignment) || (node.get<3>()->id() == ExpressionID::Arithmetic)
+        || (node.get<3>()->id() == ExpressionID::Comparison) || (node.get<3>()->id() == ExpressionID::Logical)
+        || (node.get<3>()->id() == ExpressionID::UnaryLogical) || (node.get<3>()->id() == ExpressionID::FunctionCall)
+        || (node.get<3>()->id() == ExpressionID::MemberAccess) || (node.get<3>()->id() == ExpressionID::ArraySubscript)
+        || (node.get<3>()->id() == ExpressionID::PercentLiteral) || (node.get<3>()->id() == ExpressionID::StringLiteral)
+        || (node.get<3>()->id() == ExpressionID::RangeLiteral) || (node.get<3>()->id() == ExpressionID::CoordLiteral)
+        || (node.get<3>()->id() == ExpressionID::Separator) || (node.get<3>()->id() == ExpressionID::DeclType)) {} // valid
     else {
         return std::make_unique<ErrInvalidExpression>(node.get<3>()->getTokens());
     }
@@ -1856,7 +1705,7 @@ bool PTAssignmentExpression::hasKW(std::string_view kw_name) const {
 std::vector<Token*> PTAssignmentExpression::getTokens() const {
     std::vector<Token*> t;
 
-    auto leftV  = this->left->getTokens();
+    auto leftV = this->left->getTokens();
     auto rightV = this->right->getTokens();
 
     t.insert(t.end(), leftV.begin(), leftV.end());
@@ -1921,7 +1770,7 @@ bool PTArithmeticExpression::hasKW(std::string_view kw_name) const {
 std::vector<Token*> PTArithmeticExpression::getTokens() const {
     std::vector<Token*> t;
 
-    auto leftV  = this->left->getTokens();
+    auto leftV = this->left->getTokens();
     auto rightV = this->right->getTokens();
 
     t.insert(t.end(), leftV.begin(), leftV.end());
@@ -1986,7 +1835,7 @@ bool PTComparisonExpression::hasKW(std::string_view kw_name) const {
 std::vector<Token*> PTComparisonExpression::getTokens() const {
     std::vector<Token*> t;
 
-    auto leftV  = this->left->getTokens();
+    auto leftV = this->left->getTokens();
     auto rightV = this->right->getTokens();
 
     t.insert(t.end(), leftV.begin(), leftV.end());
@@ -2051,7 +1900,7 @@ bool PTLogicalExpression::hasKW(std::string_view kw_name) const {
 std::vector<Token*> PTLogicalExpression::getTokens() const {
     std::vector<Token*> t;
 
-    auto leftV  = this->left->getTokens();
+    auto leftV = this->left->getTokens();
     auto rightV = this->right->getTokens();
 
     t.insert(t.end(), leftV.begin(), leftV.end());
@@ -2294,7 +2143,7 @@ bool PTForRangeExpression::hasKW(std::string_view kw_name) const {
 std::vector<Token*> PTForRangeExpression::getTokens() const {
     std::vector<Token*> t;
 
-    auto leftV  = this->left->getTokens();
+    auto leftV = this->left->getTokens();
     auto rightV = this->right->getTokens();
 
     t.insert(t.end(), leftV.begin(), leftV.end());
@@ -2359,7 +2208,7 @@ bool PTMemberAccessExpression::hasKW(std::string_view kw_name) const {
 std::vector<Token*> PTMemberAccessExpression::getTokens() const {
     std::vector<Token*> t;
 
-    auto leftV  = this->left->getTokens();
+    auto leftV = this->left->getTokens();
     auto rightV = this->right->getTokens();
 
     t.insert(t.end(), leftV.begin(), leftV.end());
@@ -2617,7 +2466,7 @@ std::vector<Token*> PTArraySubscriptExpression::getTokens() const {
     std::vector<Token*> t;
 
     auto arrayV = this->array->getTokens();
-    auto exprV  = this->expr->getTokens();
+    auto exprV = this->expr->getTokens();
 
     t.insert(t.end(), arrayV.begin(), arrayV.end());
     t.push_back(this->left);
@@ -2773,7 +2622,7 @@ bool PTRangeLiteralExpression::hasKW(std::string_view kw_name) const {
 std::vector<Token*> PTRangeLiteralExpression::getTokens() const {
     std::vector<Token*> t;
 
-    auto leftV  = this->left->getTokens();
+    auto leftV = this->left->getTokens();
     auto rightV = this->right->getTokens();
 
     t.insert(t.end(), leftV.begin(), leftV.end());
@@ -2890,7 +2739,7 @@ bool PTSeparatorExpression::hasKW(std::string_view kw_name) const {
 std::vector<Token*> PTSeparatorExpression::getTokens() const {
     std::vector<Token*> t;
 
-    auto leftV  = this->left->getTokens();
+    auto leftV = this->left->getTokens();
     auto rightV = this->right->getTokens();
 
     t.insert(t.end(), leftV.begin(), leftV.end());

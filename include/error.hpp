@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -76,7 +76,7 @@ protected:
     Error() = default;
 
 public:
-    Error(const Error&)            = delete;
+    Error(const Error&) = delete;
     Error& operator=(const Error&) = delete;
 
     virtual ~Error() = default;

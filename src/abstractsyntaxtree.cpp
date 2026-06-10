@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -20,6 +20,7 @@
 // IN THE SOFTWARE.
 //
 #include <abstractsyntaxtree.hpp>
+
 #include <tokenliterals.hpp>
 
 /*
@@ -374,7 +375,7 @@ AbstractSyntaxTree::ptr_node AbstractSyntaxTree::convertExpression(PTAssignmentE
         decl.set<1>(&intType);
         decl.set<3>(expression.get<1>()->getLastToken());
 
-        auto left  = convertExpression(decl, NodeID::OpAssign);
+        auto left = convertExpression(decl, NodeID::OpAssign);
         auto right = convertExpression(*expression.get<3>());
 
         left->as<ASTDeclarationNode*>()->setNode(std::move(right));
@@ -382,7 +383,7 @@ AbstractSyntaxTree::ptr_node AbstractSyntaxTree::convertExpression(PTAssignmentE
         return left;
     }
     else {
-        auto left  = convertExpression(*expression.get<1>(), NodeID::OpAssign);
+        auto left = convertExpression(*expression.get<1>(), NodeID::OpAssign);
         auto right = convertExpression(*expression.get<3>());
 
         if (left->id() == NodeID::Declaration) {
@@ -399,7 +400,7 @@ AbstractSyntaxTree::ptr_node AbstractSyntaxTree::convertExpression(PTAssignmentE
 }
 
 AbstractSyntaxTree::ptr_node AbstractSyntaxTree::convertExpression(PTArithmeticExpression& expression) {
-    auto left  = convertExpression(*expression.get<1>());
+    auto left = convertExpression(*expression.get<1>());
     auto right = convertExpression(*expression.get<3>());
 
     ptr_node node;
@@ -415,7 +416,7 @@ AbstractSyntaxTree::ptr_node AbstractSyntaxTree::convertExpression(PTArithmeticE
 }
 
 AbstractSyntaxTree::ptr_node AbstractSyntaxTree::convertExpression(PTComparisonExpression& expression) {
-    auto left  = convertExpression(*expression.get<1>());
+    auto left = convertExpression(*expression.get<1>());
     auto right = convertExpression(*expression.get<3>());
 
     ptr_node node;
@@ -437,7 +438,7 @@ AbstractSyntaxTree::ptr_node AbstractSyntaxTree::convertExpression(PTComparisonE
 }
 
 AbstractSyntaxTree::ptr_node AbstractSyntaxTree::convertExpression(PTLogicalExpression& expression) {
-    auto left  = convertExpression(*expression.get<1>());
+    auto left = convertExpression(*expression.get<1>());
     auto right = convertExpression(*expression.get<3>());
 
     ptr_node node;
@@ -538,7 +539,7 @@ AbstractSyntaxTree::ptr_node AbstractSyntaxTree::convertExpression(PTMemberAcces
     usize nestedEnd = 0;
     if (nodes.front()->id() == NodeID::FunctionCall) {
         functionCall = std::move(nodes.front());
-        nestedEnd    = 1;
+        nestedEnd = 1;
 
         ptr_node_v nestedCalls;
         for (usize i = 1; i < nodes.size(); ++i, ++nestedEnd) {
@@ -788,7 +789,7 @@ AbstractSyntaxTree::ptr_node AbstractSyntaxTree::convertExpression(PTAssertExpre
 }
 
 AbstractSyntaxTree::ptr_node AbstractSyntaxTree::convertExpression(PTArraySubscriptExpression& expression) {
-    auto node                  = std::make_unique<ASTArraySubscriptNode>();
+    auto node = std::make_unique<ASTArraySubscriptNode>();
     std::vector<Token*> tokens = expression.get<1>()->getTokens();
     std::string name;
     for (auto&& token : tokens)
@@ -810,7 +811,7 @@ AbstractSyntaxTree::ptr_node AbstractSyntaxTree::convertExpression(PTStringLiter
 
 AbstractSyntaxTree::ptr_node AbstractSyntaxTree::convertExpression(PTRangeLiteralExpression& expression) {
     auto from = convertExpression(*expression.get<1>());
-    auto to   = convertExpression(*expression.get<3>());
+    auto to = convertExpression(*expression.get<3>());
 
     auto node = std::make_unique<ASTOpRangeNode>();
     node->setLeft(std::move(from));
@@ -918,8 +919,8 @@ InsertC AbstractSyntaxTree::convertInsertControl(PTMemberAccessExpression& expre
         control |= InsertC::Rule;
     else if (left->value == KW::Pos)
         control |= InsertC::Pos;
-    else if (left->value == KW::Index)
-        control |= InsertC::Index;
+    else if (left->value == KW::Modulo)
+        control |= InsertC::Modulo;
 
     if (expression.get<3>()->id() != ExpressionID::MemberAccess) {
         Token* right = expression.get<3>()->getLastToken();
@@ -938,6 +939,8 @@ InsertC AbstractSyntaxTree::convertInsertControl(PTMemberAccessExpression& expre
             control |= InsertC::Random;
         else if (right->value == KW::Pos)
             control |= InsertC::Pos;
+        else if (right->value == KW::Modulo)
+            control |= InsertC::Modulo;
         else if (right->value == KW::Index)
             control |= InsertC::Index;
         else if (right->value == KW::Type)

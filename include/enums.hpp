@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -40,25 +40,25 @@ enum class Order {
 
 enum class Op {
     And = 0,
-    Or  = 1,
+    Or = 1,
 };
 
 enum class ValueType {
-    Null   = 0,
-    Bool   = 1 << 0,
-    Int    = 1 << 1,
-    Range  = 1 << 2,
-    Coord  = 1 << 3,
-    Float  = 1 << 4,
+    Null = 0,
+    Bool = 1 << 0,
+    Int = 1 << 1,
+    Range = 1 << 2,
+    Coord = 1 << 3,
+    Float = 1 << 4,
     String = 1 << 5,
     Object = 1 << 6,
-    Array  = 1 << 7, // array needs to have a subtype
+    Array = 1 << 7, // array needs to have a subtype
 
-    ArrayBool   = Array | Bool,
-    ArrayInt    = Array | Int,
-    ArrayRange  = Array | Range,
-    ArrayCoord  = Array | Coord,
-    ArrayFloat  = Array | Float,
+    ArrayBool = Array | Bool,
+    ArrayInt = Array | Int,
+    ArrayRange = Array | Range,
+    ArrayCoord = Array | Coord,
+    ArrayFloat = Array | Float,
     ArrayString = Array | String,
     ArrayObject = Array | Object,
 };
@@ -190,22 +190,22 @@ enum class NodeID {
 
 enum class Rotation {
     Default = 0,
-    V       = 1 << 0, // XFLIP
-    H       = 1 << 1, // YFLIP
-    R       = 1 << 2, // ROTATE
-    N       = 1 << 3, // NONE
+    V = 1 << 0, // XFLIP
+    H = 1 << 1, // YFLIP
+    R = 1 << 2, // ROTATE
+    N = 1 << 3, // NONE
 
-    VH  = V | H,
-    VR  = V | R,
-    HR  = H | R,
+    VH = V | H,
+    VR = V | R,
+    HR = H | R,
     VHR = V | H | R,
 
     X = 1 << 4, // XFLIP
     Y = 1 << 5, // YFLIP
 
-    XY  = X | Y,
-    XR  = X | R,
-    YR  = Y | R,
+    XY = X | Y,
+    XR = X | R,
+    YR = Y | R,
     XYR = X | Y | R,
 };
 
@@ -230,33 +230,36 @@ inline Rotation& operator^=(Rotation& lhs, Rotation rhs) noexcept {
 }
 
 enum class InsertC {
-    Default    = 0,
-    Insert     = 1 << 0,
+    Default = 0,
+    Insert = 1 << 0,
     Automapper = 1 << 1,
-    Newrun     = 1 << 2,
-    Newrule    = 1 << 3,
-    Nocopy     = 1 << 4,
-    Rule       = 1 << 5,
-    Nodefault  = 1 << 6,
-    Random     = 1 << 7,
-    Pos        = 1 << 8,
-    Index      = 1 << 9,
-    Type       = 1 << 10,
-    Operator   = 1 << 11,
-    Group      = 1 << 12,
+    Newrun = 1 << 2,
+    Newrule = 1 << 3,
+    Nocopy = 1 << 4,
+    Rule = 1 << 5,
+    Nodefault = 1 << 6,
+    Random = 1 << 7,
+    Pos = 1 << 8,
+    Modulo = 1 << 9,
+    Index = 1 << 10,
+    Type = 1 << 11,
+    Operator = 1 << 12,
+    Group = 1 << 13,
 
-    InsertAutomapper      = Insert | Automapper,
-    InsertNewrun          = Insert | Newrun,
-    InsertNewrule         = Insert | Newrule,
-    InsertNocopy          = Insert | Nocopy,
-    InsertRuleNodefault   = Insert | Rule | Nodefault,
-    InsertRuleRandom      = Insert | Rule | Random,
-    InsertRulePos         = Insert | Rule | Pos,
-    InsertRulePosType     = Insert | Rule | Pos | Type,
-    InsertRulePosIndex    = Insert | Rule | Pos | Index,
+    InsertAutomapper = Insert | Automapper,
+    InsertNewrun = Insert | Newrun,
+    InsertNewrule = Insert | Newrule,
+    InsertNocopy = Insert | Nocopy,
+    InsertRuleNodefault = Insert | Rule | Nodefault,
+    InsertRuleRandom = Insert | Rule | Random,
+    InsertRulePos = Insert | Rule | Pos,
+    InsertRulePosType = Insert | Rule | Pos | Type,
+    InsertRulePosIndex = Insert | Rule | Pos | Index,
     InsertRulePosOperator = Insert | Rule | Pos | Operator,
-    InsertRulePosGroup    = Insert | Rule | Pos | Group,
-    InsertRuleIndex       = Insert | Rule | Index,
+    InsertRulePosGroup = Insert | Rule | Pos | Group,
+    InsertRuleModulo = Insert | Rule | Modulo,
+    InsertRuleModuloPos = Insert | Rule | Modulo | Pos,
+    InsertRuleIndex = Insert | Rule | Index,
 };
 
 inline InsertC operator|(InsertC lhs, InsertC rhs) noexcept {

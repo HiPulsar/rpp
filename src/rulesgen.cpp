@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -20,6 +20,7 @@
 // IN THE SOFTWARE.
 //
 #include <rulesgen.hpp>
+
 #include <automapper.hpp>
 #include <erroroutput.hpp>
 
@@ -82,6 +83,13 @@ void RulesGen::run(std::vector<AutoMapper>& automappers, const std::filesystem::
                             for (const auto& it : combinator.combination()) {
                                 auto posRule = *it;
                                 generatePosRule(posRule, i == 0, rulesFile);
+                            }
+
+                            for (auto& moduloRule : rule.moduloRules) {
+                                rulesFile << "Modulo";
+                                rulesFile << " " << moduloRule.mod_x << " " << moduloRule.mod_y;
+                                rulesFile << " " << moduloRule.offset_x << " " << moduloRule.offset_y;
+                                newLine(rulesFile);
                             }
 
                             if (rule.random > 1.0f) {
@@ -152,10 +160,8 @@ void RulesGen::newLine(std::ofstream& rulesFile) {
 void RulesGen::optimize(Rule& rule) const {
     for (usize i = 1; i < rule.posRules.size(); ++i) {
         for (isize j = i - 1; j >= 0; --j) {
-            if (rule.posRules[i].ruleType == rule.posRules[j].ruleType
-                && rule.posRules[i].x == rule.posRules[j].x
-                && rule.posRules[i].y == rule.posRules[j].y
-                && rule.posRules[i].op == rule.posRules[j].op
+            if (rule.posRules[i].ruleType == rule.posRules[j].ruleType && rule.posRules[i].x == rule.posRules[j].x
+                && rule.posRules[i].y == rule.posRules[j].y && rule.posRules[i].op == rule.posRules[j].op
                 && rule.posRules[i].group == rule.posRules[j].group) {
                 rule.posRules[i].ruleType = PosRuleType::NORULE;
                 if (rule.posRules[j].ruleType == PosRuleType::EMPTY || rule.posRules[j].ruleType == PosRuleType::FULL)
@@ -169,13 +175,16 @@ void RulesGen::optimize(Rule& rule) const {
 
     rule.posRules.erase(
         std::remove_if(
-            rule.posRules.begin(), rule.posRules.end(),
+            rule.posRules.begin(),
+            rule.posRules.end(),
             [](const PosRule& posRule) {
                 return posRule.ruleType == PosRuleType::NORULE;
             }
         ),
         rule.posRules.end()
     );
+
+    rule.moduloRules.erase(util::removeDuplicates(rule.moduloRules.begin(), rule.moduloRules.end()), rule.moduloRules.end());
 }
 
 void RulesGen::optimize(PosRule& rule) const {
@@ -209,7 +218,8 @@ std::vector<std::vector<PosRule>> RulesGen::getOrPosRules(Rule& rule) const {
 void RulesGen::removeOrPosRules(Rule& rule) const {
     rule.posRules.erase(
         std::remove_if(
-            rule.posRules.begin(), rule.posRules.end(),
+            rule.posRules.begin(),
+            rule.posRules.end(),
             [](const PosRule& posRule) {
                 return posRule.op == Op::Or;
             }
@@ -230,7 +240,7 @@ Combinator::Combinator(std::vector<std::vector<PosRule>>& vectors)
 
 bool Combinator::next() {
     for (isize i = m_vectors.size() - 1; i >= 0; --i) {
-        auto& v  = m_vectors[i];
+        auto& v = m_vectors[i];
         auto& it = m_combination[i];
 
         if (++it != v.end())

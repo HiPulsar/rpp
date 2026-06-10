@@ -2,11 +2,11 @@
 **rules++** is a small experiment, aiming to make mappers utterly lazy, by unlocking the full potential of DDNet's **rules**. It is meant to be simple, readable and most importantly correct, everything else is irrelevant.
 
 ## Getting started
-To start using **rules++** you need 2 files, which you can grab from [here](https://github.com/Aerll/rpp/releases/tag/v1.0.0):
+To start using **rules++** you need 2 files, which you can grab from [here](https://github.com/HiPulsar/rpp/releases/tag/v1.0.0):
   - an executable, which translates **rules++** code to **rules**
   - **base.r** - contains all necessary building blocks
   
-A tutorial, explaining every feature in detail is available [here](https://github.com/Aerll/rpp/wiki).
+A tutorial, explaining every feature in detail is available [here](https://github.com/HiPulsar/rpp/wiki).
 
 ## Utilities for Notepad++
 Utilities include syntax highlighting and auto completion. Preferable theme can be found [here](https://github.com/cydh/VS2015-Dark-Npp).<br/>

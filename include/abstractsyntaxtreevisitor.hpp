@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -37,16 +37,16 @@ class IASTNodeEvaluator;
 
 class IASTNode {
 protected:
-    using ptr_node    = std::unique_ptr<IASTNode>;
-    using ptr_node_v  = std::vector<ptr_node>;
-    using ptr_value   = std::unique_ptr<Value>;
+    using ptr_node = std::unique_ptr<IASTNode>;
+    using ptr_node_v = std::vector<ptr_node>;
+    using ptr_value = std::unique_ptr<Value>;
     using ptr_value_v = std::vector<ptr_node>;
 
 public:
-    IASTNode(const IASTNode&)            = delete;
+    IASTNode(const IASTNode&) = delete;
     IASTNode& operator=(const IASTNode&) = delete;
 
-    IASTNode(IASTNode&&)            = default;
+    IASTNode(IASTNode&&) = default;
     IASTNode& operator=(IASTNode&&) = default;
 
     virtual ~IASTNode() = default;
@@ -71,10 +71,10 @@ public:
 
     virtual ValueType getNodeType();
 
-    virtual void accept(IASTNodeParser& visitor)         = 0;
-    virtual void accept(IASTNodeLinker& visitor)         = 0;
+    virtual void accept(IASTNodeParser& visitor) = 0;
+    virtual void accept(IASTNodeLinker& visitor) = 0;
     virtual Value* accept(IASTNodeEvaluator& translator) = 0;
-    virtual NodeID id() const noexcept                   = 0;
+    virtual NodeID id() const noexcept = 0;
 
     virtual void attach([[maybe_unused]] IASTNode* previous) {}
 
@@ -199,75 +199,75 @@ public:
         return std::move(m_errors);
     }
 
-    virtual void parse(ASTNullNode* node)                 = 0;
-    virtual void parse(ASTBoolNode* node)                 = 0;
-    virtual void parse(ASTIntNode* node)                  = 0;
-    virtual void parse(ASTRangeNode* node)                = 0;
-    virtual void parse(ASTCoordNode* node)                = 0;
-    virtual void parse(ASTFloatNode* node)                = 0;
-    virtual void parse(ASTStringNode* node)               = 0;
-    virtual void parse(ASTObjectNode* node)               = 0;
-    virtual void parse(ASTArrayNode<BoolValue>* node)     = 0;
-    virtual void parse(ASTArrayNode<IntValue>* node)      = 0;
-    virtual void parse(ASTArrayNode<RangeValue>* node)    = 0;
-    virtual void parse(ASTArrayNode<CoordValue>* node)    = 0;
-    virtual void parse(ASTArrayNode<FloatValue>* node)    = 0;
-    virtual void parse(ASTArrayNode<StringValue>* node)   = 0;
-    virtual void parse(ASTArrayNode<ObjectValue>* node)   = 0;
-    virtual void parse(ASTDeclarationNode* node)          = 0;
-    virtual void parse(ASTIdentifierNode* node)           = 0;
-    virtual void parse(ASTVariableNode* node)             = 0;
-    virtual void parse(ASTAnchorNode* node)               = 0;
-    virtual void parse(ASTCountNode* node)                = 0;
-    virtual void parse(ASTLastNode* node)                 = 0;
-    virtual void parse(ASTXNode* node)                    = 0;
-    virtual void parse(ASTYNode* node)                    = 0;
-    virtual void parse(ASTRotationNode* node)             = 0;
-    virtual void parse(ASTEmptyNode* node)                = 0;
-    virtual void parse(ASTFullNode* node)                 = 0;
-    virtual void parse(ASTIndexNode* node)                = 0;
-    virtual void parse(ASTNotIndexNode* node)             = 0;
-    virtual void parse(ASTInsertNode* node)               = 0;
-    virtual void parse(ASTRotateNode* node)               = 0;
-    virtual void parse(ASTOpAssignNode* node)             = 0;
-    virtual void parse(ASTOpAddNode* node)                = 0;
-    virtual void parse(ASTOpSubtractNode* node)           = 0;
-    virtual void parse(ASTOpMultiplyNode* node)           = 0;
-    virtual void parse(ASTOpDivideNode* node)             = 0;
-    virtual void parse(ASTOpEqualNode* node)              = 0;
-    virtual void parse(ASTOpNotEqualNode* node)           = 0;
-    virtual void parse(ASTOpGreaterThanNode* node)        = 0;
+    virtual void parse(ASTNullNode* node) = 0;
+    virtual void parse(ASTBoolNode* node) = 0;
+    virtual void parse(ASTIntNode* node) = 0;
+    virtual void parse(ASTRangeNode* node) = 0;
+    virtual void parse(ASTCoordNode* node) = 0;
+    virtual void parse(ASTFloatNode* node) = 0;
+    virtual void parse(ASTStringNode* node) = 0;
+    virtual void parse(ASTObjectNode* node) = 0;
+    virtual void parse(ASTArrayNode<BoolValue>* node) = 0;
+    virtual void parse(ASTArrayNode<IntValue>* node) = 0;
+    virtual void parse(ASTArrayNode<RangeValue>* node) = 0;
+    virtual void parse(ASTArrayNode<CoordValue>* node) = 0;
+    virtual void parse(ASTArrayNode<FloatValue>* node) = 0;
+    virtual void parse(ASTArrayNode<StringValue>* node) = 0;
+    virtual void parse(ASTArrayNode<ObjectValue>* node) = 0;
+    virtual void parse(ASTDeclarationNode* node) = 0;
+    virtual void parse(ASTIdentifierNode* node) = 0;
+    virtual void parse(ASTVariableNode* node) = 0;
+    virtual void parse(ASTAnchorNode* node) = 0;
+    virtual void parse(ASTCountNode* node) = 0;
+    virtual void parse(ASTLastNode* node) = 0;
+    virtual void parse(ASTXNode* node) = 0;
+    virtual void parse(ASTYNode* node) = 0;
+    virtual void parse(ASTRotationNode* node) = 0;
+    virtual void parse(ASTEmptyNode* node) = 0;
+    virtual void parse(ASTFullNode* node) = 0;
+    virtual void parse(ASTIndexNode* node) = 0;
+    virtual void parse(ASTNotIndexNode* node) = 0;
+    virtual void parse(ASTInsertNode* node) = 0;
+    virtual void parse(ASTRotateNode* node) = 0;
+    virtual void parse(ASTOpAssignNode* node) = 0;
+    virtual void parse(ASTOpAddNode* node) = 0;
+    virtual void parse(ASTOpSubtractNode* node) = 0;
+    virtual void parse(ASTOpMultiplyNode* node) = 0;
+    virtual void parse(ASTOpDivideNode* node) = 0;
+    virtual void parse(ASTOpEqualNode* node) = 0;
+    virtual void parse(ASTOpNotEqualNode* node) = 0;
+    virtual void parse(ASTOpGreaterThanNode* node) = 0;
     virtual void parse(ASTOpGreaterThanOrEqualNode* node) = 0;
-    virtual void parse(ASTOpLessThanNode* node)           = 0;
-    virtual void parse(ASTOpLessThanOrEqualNode* node)    = 0;
-    virtual void parse(ASTOpAndNode* node)                = 0;
-    virtual void parse(ASTOpOrNode* node)                 = 0;
-    virtual void parse(ASTOpNotNode* node)                = 0;
-    virtual void parse(ASTOpRangeNode* node)              = 0;
-    virtual void parse(ASTOpCoordNode* node)              = 0;
-    virtual void parse(ASTErrorNode* node)                = 0;
-    virtual void parse(ASTWarningNode* node)              = 0;
-    virtual void parse(ASTAssertNode* node)               = 0;
-    virtual void parse(ASTReturnNode* node)               = 0;
-    virtual void parse(ASTBreakNode* node)                = 0;
-    virtual void parse(ASTContinueNode* node)             = 0;
-    virtual void parse(ASTForRangeNode* node)             = 0;
-    virtual void parse(ASTArraySubscriptNode* node)       = 0;
-    virtual void parse(ASTPushCallNode* node)             = 0;
-    virtual void parse(ASTHasCallNode* node)              = 0;
-    virtual void parse(ASTUniqueCallNode* node)           = 0;
-    virtual void parse(ASTStrCallNode* node)              = 0;
-    virtual void parse(ASTNameCallNode* node)             = 0;
-    virtual void parse(ASTFindCallNode* node)             = 0;
-    virtual void parse(ASTFunctionCallNode* node)         = 0;
-    virtual void parse(ASTNestedCallNode* node)           = 0;
-    virtual void parse(ASTForNode* node)                  = 0;
-    virtual void parse(ASTIfNode* node)                   = 0;
-    virtual void parse(ASTFunctionIdentifierNode* node)   = 0;
-    virtual void parse(ASTFunctionNode* node)             = 0;
-    virtual void parse(ASTNestedIdentifierNode* node)     = 0;
-    virtual void parse(ASTNestedFunctionNode* node)       = 0;
-    virtual void parse(ASTInvokeNestedNode* node)         = 0;
+    virtual void parse(ASTOpLessThanNode* node) = 0;
+    virtual void parse(ASTOpLessThanOrEqualNode* node) = 0;
+    virtual void parse(ASTOpAndNode* node) = 0;
+    virtual void parse(ASTOpOrNode* node) = 0;
+    virtual void parse(ASTOpNotNode* node) = 0;
+    virtual void parse(ASTOpRangeNode* node) = 0;
+    virtual void parse(ASTOpCoordNode* node) = 0;
+    virtual void parse(ASTErrorNode* node) = 0;
+    virtual void parse(ASTWarningNode* node) = 0;
+    virtual void parse(ASTAssertNode* node) = 0;
+    virtual void parse(ASTReturnNode* node) = 0;
+    virtual void parse(ASTBreakNode* node) = 0;
+    virtual void parse(ASTContinueNode* node) = 0;
+    virtual void parse(ASTForRangeNode* node) = 0;
+    virtual void parse(ASTArraySubscriptNode* node) = 0;
+    virtual void parse(ASTPushCallNode* node) = 0;
+    virtual void parse(ASTHasCallNode* node) = 0;
+    virtual void parse(ASTUniqueCallNode* node) = 0;
+    virtual void parse(ASTStrCallNode* node) = 0;
+    virtual void parse(ASTNameCallNode* node) = 0;
+    virtual void parse(ASTFindCallNode* node) = 0;
+    virtual void parse(ASTFunctionCallNode* node) = 0;
+    virtual void parse(ASTNestedCallNode* node) = 0;
+    virtual void parse(ASTForNode* node) = 0;
+    virtual void parse(ASTIfNode* node) = 0;
+    virtual void parse(ASTFunctionIdentifierNode* node) = 0;
+    virtual void parse(ASTFunctionNode* node) = 0;
+    virtual void parse(ASTNestedIdentifierNode* node) = 0;
+    virtual void parse(ASTNestedFunctionNode* node) = 0;
+    virtual void parse(ASTInvokeNestedNode* node) = 0;
 };
 
 class IASTNodeLinker : public ErrorQueue {
@@ -278,82 +278,82 @@ public:
         return std::move(m_errors);
     }
 
-    virtual void link(ASTNullNode* node)                 = 0;
-    virtual void link(ASTBoolNode* node)                 = 0;
-    virtual void link(ASTIntNode* node)                  = 0;
-    virtual void link(ASTRangeNode* node)                = 0;
-    virtual void link(ASTCoordNode* node)                = 0;
-    virtual void link(ASTFloatNode* node)                = 0;
-    virtual void link(ASTStringNode* node)               = 0;
-    virtual void link(ASTObjectNode* node)               = 0;
-    virtual void link(ASTArrayNode<BoolValue>* node)     = 0;
-    virtual void link(ASTArrayNode<IntValue>* node)      = 0;
-    virtual void link(ASTArrayNode<RangeValue>* node)    = 0;
-    virtual void link(ASTArrayNode<CoordValue>* node)    = 0;
-    virtual void link(ASTArrayNode<FloatValue>* node)    = 0;
-    virtual void link(ASTArrayNode<StringValue>* node)   = 0;
-    virtual void link(ASTArrayNode<ObjectValue>* node)   = 0;
-    virtual void link(ASTDeclarationNode* node)          = 0;
-    virtual void link(ASTIdentifierNode* node)           = 0;
-    virtual void link(ASTVariableNode* node)             = 0;
-    virtual void link(ASTAnchorNode* node)               = 0;
-    virtual void link(ASTCountNode* node)                = 0;
-    virtual void link(ASTLastNode* node)                 = 0;
-    virtual void link(ASTXNode* node)                    = 0;
-    virtual void link(ASTYNode* node)                    = 0;
-    virtual void link(ASTRotationNode* node)             = 0;
-    virtual void link(ASTEmptyNode* node)                = 0;
-    virtual void link(ASTFullNode* node)                 = 0;
-    virtual void link(ASTIndexNode* node)                = 0;
-    virtual void link(ASTNotIndexNode* node)             = 0;
-    virtual void link(ASTInsertNode* node)               = 0;
-    virtual void link(ASTRotateNode* node)               = 0;
-    virtual void link(ASTOpAssignNode* node)             = 0;
-    virtual void link(ASTOpAddNode* node)                = 0;
-    virtual void link(ASTOpSubtractNode* node)           = 0;
-    virtual void link(ASTOpMultiplyNode* node)           = 0;
-    virtual void link(ASTOpDivideNode* node)             = 0;
-    virtual void link(ASTOpEqualNode* node)              = 0;
-    virtual void link(ASTOpNotEqualNode* node)           = 0;
-    virtual void link(ASTOpGreaterThanNode* node)        = 0;
+    virtual void link(ASTNullNode* node) = 0;
+    virtual void link(ASTBoolNode* node) = 0;
+    virtual void link(ASTIntNode* node) = 0;
+    virtual void link(ASTRangeNode* node) = 0;
+    virtual void link(ASTCoordNode* node) = 0;
+    virtual void link(ASTFloatNode* node) = 0;
+    virtual void link(ASTStringNode* node) = 0;
+    virtual void link(ASTObjectNode* node) = 0;
+    virtual void link(ASTArrayNode<BoolValue>* node) = 0;
+    virtual void link(ASTArrayNode<IntValue>* node) = 0;
+    virtual void link(ASTArrayNode<RangeValue>* node) = 0;
+    virtual void link(ASTArrayNode<CoordValue>* node) = 0;
+    virtual void link(ASTArrayNode<FloatValue>* node) = 0;
+    virtual void link(ASTArrayNode<StringValue>* node) = 0;
+    virtual void link(ASTArrayNode<ObjectValue>* node) = 0;
+    virtual void link(ASTDeclarationNode* node) = 0;
+    virtual void link(ASTIdentifierNode* node) = 0;
+    virtual void link(ASTVariableNode* node) = 0;
+    virtual void link(ASTAnchorNode* node) = 0;
+    virtual void link(ASTCountNode* node) = 0;
+    virtual void link(ASTLastNode* node) = 0;
+    virtual void link(ASTXNode* node) = 0;
+    virtual void link(ASTYNode* node) = 0;
+    virtual void link(ASTRotationNode* node) = 0;
+    virtual void link(ASTEmptyNode* node) = 0;
+    virtual void link(ASTFullNode* node) = 0;
+    virtual void link(ASTIndexNode* node) = 0;
+    virtual void link(ASTNotIndexNode* node) = 0;
+    virtual void link(ASTInsertNode* node) = 0;
+    virtual void link(ASTRotateNode* node) = 0;
+    virtual void link(ASTOpAssignNode* node) = 0;
+    virtual void link(ASTOpAddNode* node) = 0;
+    virtual void link(ASTOpSubtractNode* node) = 0;
+    virtual void link(ASTOpMultiplyNode* node) = 0;
+    virtual void link(ASTOpDivideNode* node) = 0;
+    virtual void link(ASTOpEqualNode* node) = 0;
+    virtual void link(ASTOpNotEqualNode* node) = 0;
+    virtual void link(ASTOpGreaterThanNode* node) = 0;
     virtual void link(ASTOpGreaterThanOrEqualNode* node) = 0;
-    virtual void link(ASTOpLessThanNode* node)           = 0;
-    virtual void link(ASTOpLessThanOrEqualNode* node)    = 0;
-    virtual void link(ASTOpAndNode* node)                = 0;
-    virtual void link(ASTOpOrNode* node)                 = 0;
-    virtual void link(ASTOpNotNode* node)                = 0;
-    virtual void link(ASTOpRangeNode* node)              = 0;
-    virtual void link(ASTOpCoordNode* node)              = 0;
-    virtual void link(ASTErrorNode* node)                = 0;
-    virtual void link(ASTWarningNode* node)              = 0;
-    virtual void link(ASTAssertNode* node)               = 0;
-    virtual void link(ASTReturnNode* node)               = 0;
-    virtual void link(ASTBreakNode* node)                = 0;
-    virtual void link(ASTContinueNode* node)             = 0;
-    virtual void link(ASTForRangeNode* node)             = 0;
-    virtual void link(ASTArraySubscriptNode* node)       = 0;
-    virtual void link(ASTPushCallNode* node)             = 0;
-    virtual void link(ASTHasCallNode* node)              = 0;
-    virtual void link(ASTUniqueCallNode* node)           = 0;
-    virtual void link(ASTStrCallNode* node)              = 0;
-    virtual void link(ASTNameCallNode* node)             = 0;
-    virtual void link(ASTFindCallNode* node)             = 0;
-    virtual void link(ASTFunctionCallNode* node)         = 0;
-    virtual void link(ASTNestedCallNode* node)           = 0;
-    virtual void link(ASTForNode* node)                  = 0;
-    virtual void link(ASTIfNode* node)                   = 0;
-    virtual void link(ASTFunctionIdentifierNode* node)   = 0;
-    virtual void link(ASTFunctionNode* node)             = 0;
-    virtual void link(ASTNestedIdentifierNode* node)     = 0;
-    virtual void link(ASTNestedFunctionNode* node)       = 0;
-    virtual void link(ASTInvokeNestedNode* node)         = 0;
+    virtual void link(ASTOpLessThanNode* node) = 0;
+    virtual void link(ASTOpLessThanOrEqualNode* node) = 0;
+    virtual void link(ASTOpAndNode* node) = 0;
+    virtual void link(ASTOpOrNode* node) = 0;
+    virtual void link(ASTOpNotNode* node) = 0;
+    virtual void link(ASTOpRangeNode* node) = 0;
+    virtual void link(ASTOpCoordNode* node) = 0;
+    virtual void link(ASTErrorNode* node) = 0;
+    virtual void link(ASTWarningNode* node) = 0;
+    virtual void link(ASTAssertNode* node) = 0;
+    virtual void link(ASTReturnNode* node) = 0;
+    virtual void link(ASTBreakNode* node) = 0;
+    virtual void link(ASTContinueNode* node) = 0;
+    virtual void link(ASTForRangeNode* node) = 0;
+    virtual void link(ASTArraySubscriptNode* node) = 0;
+    virtual void link(ASTPushCallNode* node) = 0;
+    virtual void link(ASTHasCallNode* node) = 0;
+    virtual void link(ASTUniqueCallNode* node) = 0;
+    virtual void link(ASTStrCallNode* node) = 0;
+    virtual void link(ASTNameCallNode* node) = 0;
+    virtual void link(ASTFindCallNode* node) = 0;
+    virtual void link(ASTFunctionCallNode* node) = 0;
+    virtual void link(ASTNestedCallNode* node) = 0;
+    virtual void link(ASTForNode* node) = 0;
+    virtual void link(ASTIfNode* node) = 0;
+    virtual void link(ASTFunctionIdentifierNode* node) = 0;
+    virtual void link(ASTFunctionNode* node) = 0;
+    virtual void link(ASTNestedIdentifierNode* node) = 0;
+    virtual void link(ASTNestedFunctionNode* node) = 0;
+    virtual void link(ASTInvokeNestedNode* node) = 0;
 };
 
 class IASTNodeEvaluator : public ErrorQueue {
 protected:
-    using ptr_node    = std::unique_ptr<IASTNode>;
-    using ptr_node_v  = std::vector<ptr_node>;
-    using ptr_value   = std::unique_ptr<Value>;
+    using ptr_node = std::unique_ptr<IASTNode>;
+    using ptr_node_v = std::vector<ptr_node>;
+    using ptr_value = std::unique_ptr<Value>;
     using ptr_value_v = std::vector<ptr_value>;
 
 public:
@@ -381,75 +381,75 @@ public:
         return m_failed;
     }
 
-    virtual Value* evaluate(ASTNullNode* node)                 = 0;
-    virtual Value* evaluate(ASTBoolNode* node)                 = 0;
-    virtual Value* evaluate(ASTIntNode* node)                  = 0;
-    virtual Value* evaluate(ASTRangeNode* node)                = 0;
-    virtual Value* evaluate(ASTCoordNode* node)                = 0;
-    virtual Value* evaluate(ASTFloatNode* node)                = 0;
-    virtual Value* evaluate(ASTStringNode* node)               = 0;
-    virtual Value* evaluate(ASTObjectNode* node)               = 0;
-    virtual Value* evaluate(ASTArrayNode<BoolValue>* node)     = 0;
-    virtual Value* evaluate(ASTArrayNode<IntValue>* node)      = 0;
-    virtual Value* evaluate(ASTArrayNode<RangeValue>* node)    = 0;
-    virtual Value* evaluate(ASTArrayNode<CoordValue>* node)    = 0;
-    virtual Value* evaluate(ASTArrayNode<FloatValue>* node)    = 0;
-    virtual Value* evaluate(ASTArrayNode<StringValue>* node)   = 0;
-    virtual Value* evaluate(ASTArrayNode<ObjectValue>* node)   = 0;
-    virtual Value* evaluate(ASTDeclarationNode* node)          = 0;
-    virtual Value* evaluate(ASTIdentifierNode* node)           = 0;
-    virtual Value* evaluate(ASTVariableNode* node)             = 0;
-    virtual Value* evaluate(ASTAnchorNode* node)               = 0;
-    virtual Value* evaluate(ASTCountNode* node)                = 0;
-    virtual Value* evaluate(ASTLastNode* node)                 = 0;
-    virtual Value* evaluate(ASTXNode* node)                    = 0;
-    virtual Value* evaluate(ASTYNode* node)                    = 0;
-    virtual Value* evaluate(ASTRotationNode* node)             = 0;
-    virtual Value* evaluate(ASTEmptyNode* node)                = 0;
-    virtual Value* evaluate(ASTFullNode* node)                 = 0;
-    virtual Value* evaluate(ASTIndexNode* node)                = 0;
-    virtual Value* evaluate(ASTNotIndexNode* node)             = 0;
-    virtual Value* evaluate(ASTInsertNode* node)               = 0;
-    virtual Value* evaluate(ASTRotateNode* node)               = 0;
-    virtual Value* evaluate(ASTOpAssignNode* node)             = 0;
-    virtual Value* evaluate(ASTOpAddNode* node)                = 0;
-    virtual Value* evaluate(ASTOpSubtractNode* node)           = 0;
-    virtual Value* evaluate(ASTOpMultiplyNode* node)           = 0;
-    virtual Value* evaluate(ASTOpDivideNode* node)             = 0;
-    virtual Value* evaluate(ASTOpEqualNode* node)              = 0;
-    virtual Value* evaluate(ASTOpNotEqualNode* node)           = 0;
-    virtual Value* evaluate(ASTOpGreaterThanNode* node)        = 0;
+    virtual Value* evaluate(ASTNullNode* node) = 0;
+    virtual Value* evaluate(ASTBoolNode* node) = 0;
+    virtual Value* evaluate(ASTIntNode* node) = 0;
+    virtual Value* evaluate(ASTRangeNode* node) = 0;
+    virtual Value* evaluate(ASTCoordNode* node) = 0;
+    virtual Value* evaluate(ASTFloatNode* node) = 0;
+    virtual Value* evaluate(ASTStringNode* node) = 0;
+    virtual Value* evaluate(ASTObjectNode* node) = 0;
+    virtual Value* evaluate(ASTArrayNode<BoolValue>* node) = 0;
+    virtual Value* evaluate(ASTArrayNode<IntValue>* node) = 0;
+    virtual Value* evaluate(ASTArrayNode<RangeValue>* node) = 0;
+    virtual Value* evaluate(ASTArrayNode<CoordValue>* node) = 0;
+    virtual Value* evaluate(ASTArrayNode<FloatValue>* node) = 0;
+    virtual Value* evaluate(ASTArrayNode<StringValue>* node) = 0;
+    virtual Value* evaluate(ASTArrayNode<ObjectValue>* node) = 0;
+    virtual Value* evaluate(ASTDeclarationNode* node) = 0;
+    virtual Value* evaluate(ASTIdentifierNode* node) = 0;
+    virtual Value* evaluate(ASTVariableNode* node) = 0;
+    virtual Value* evaluate(ASTAnchorNode* node) = 0;
+    virtual Value* evaluate(ASTCountNode* node) = 0;
+    virtual Value* evaluate(ASTLastNode* node) = 0;
+    virtual Value* evaluate(ASTXNode* node) = 0;
+    virtual Value* evaluate(ASTYNode* node) = 0;
+    virtual Value* evaluate(ASTRotationNode* node) = 0;
+    virtual Value* evaluate(ASTEmptyNode* node) = 0;
+    virtual Value* evaluate(ASTFullNode* node) = 0;
+    virtual Value* evaluate(ASTIndexNode* node) = 0;
+    virtual Value* evaluate(ASTNotIndexNode* node) = 0;
+    virtual Value* evaluate(ASTInsertNode* node) = 0;
+    virtual Value* evaluate(ASTRotateNode* node) = 0;
+    virtual Value* evaluate(ASTOpAssignNode* node) = 0;
+    virtual Value* evaluate(ASTOpAddNode* node) = 0;
+    virtual Value* evaluate(ASTOpSubtractNode* node) = 0;
+    virtual Value* evaluate(ASTOpMultiplyNode* node) = 0;
+    virtual Value* evaluate(ASTOpDivideNode* node) = 0;
+    virtual Value* evaluate(ASTOpEqualNode* node) = 0;
+    virtual Value* evaluate(ASTOpNotEqualNode* node) = 0;
+    virtual Value* evaluate(ASTOpGreaterThanNode* node) = 0;
     virtual Value* evaluate(ASTOpGreaterThanOrEqualNode* node) = 0;
-    virtual Value* evaluate(ASTOpLessThanNode* node)           = 0;
-    virtual Value* evaluate(ASTOpLessThanOrEqualNode* node)    = 0;
-    virtual Value* evaluate(ASTOpAndNode* node)                = 0;
-    virtual Value* evaluate(ASTOpOrNode* node)                 = 0;
-    virtual Value* evaluate(ASTOpNotNode* node)                = 0;
-    virtual Value* evaluate(ASTOpRangeNode* node)              = 0;
-    virtual Value* evaluate(ASTOpCoordNode* node)              = 0;
-    virtual Value* evaluate(ASTErrorNode* node)                = 0;
-    virtual Value* evaluate(ASTWarningNode* node)              = 0;
-    virtual Value* evaluate(ASTAssertNode* node)               = 0;
-    virtual Value* evaluate(ASTReturnNode* node)               = 0;
-    virtual Value* evaluate(ASTBreakNode* node)                = 0;
-    virtual Value* evaluate(ASTContinueNode* node)             = 0;
-    virtual Value* evaluate(ASTForRangeNode* node)             = 0;
-    virtual Value* evaluate(ASTArraySubscriptNode* node)       = 0;
-    virtual Value* evaluate(ASTPushCallNode* node)             = 0;
-    virtual Value* evaluate(ASTHasCallNode* node)              = 0;
-    virtual Value* evaluate(ASTUniqueCallNode* node)           = 0;
-    virtual Value* evaluate(ASTStrCallNode* node)              = 0;
-    virtual Value* evaluate(ASTNameCallNode* node)             = 0;
-    virtual Value* evaluate(ASTFindCallNode* node)             = 0;
-    virtual Value* evaluate(ASTFunctionCallNode* node)         = 0;
-    virtual Value* evaluate(ASTNestedCallNode* node)           = 0;
-    virtual Value* evaluate(ASTForNode* node)                  = 0;
-    virtual Value* evaluate(ASTIfNode* node)                   = 0;
-    virtual Value* evaluate(ASTFunctionIdentifierNode* node)   = 0;
-    virtual Value* evaluate(ASTFunctionNode* node)             = 0;
-    virtual Value* evaluate(ASTNestedIdentifierNode* node)     = 0;
-    virtual Value* evaluate(ASTNestedFunctionNode* node)       = 0;
-    virtual Value* evaluate(ASTInvokeNestedNode* node)         = 0;
+    virtual Value* evaluate(ASTOpLessThanNode* node) = 0;
+    virtual Value* evaluate(ASTOpLessThanOrEqualNode* node) = 0;
+    virtual Value* evaluate(ASTOpAndNode* node) = 0;
+    virtual Value* evaluate(ASTOpOrNode* node) = 0;
+    virtual Value* evaluate(ASTOpNotNode* node) = 0;
+    virtual Value* evaluate(ASTOpRangeNode* node) = 0;
+    virtual Value* evaluate(ASTOpCoordNode* node) = 0;
+    virtual Value* evaluate(ASTErrorNode* node) = 0;
+    virtual Value* evaluate(ASTWarningNode* node) = 0;
+    virtual Value* evaluate(ASTAssertNode* node) = 0;
+    virtual Value* evaluate(ASTReturnNode* node) = 0;
+    virtual Value* evaluate(ASTBreakNode* node) = 0;
+    virtual Value* evaluate(ASTContinueNode* node) = 0;
+    virtual Value* evaluate(ASTForRangeNode* node) = 0;
+    virtual Value* evaluate(ASTArraySubscriptNode* node) = 0;
+    virtual Value* evaluate(ASTPushCallNode* node) = 0;
+    virtual Value* evaluate(ASTHasCallNode* node) = 0;
+    virtual Value* evaluate(ASTUniqueCallNode* node) = 0;
+    virtual Value* evaluate(ASTStrCallNode* node) = 0;
+    virtual Value* evaluate(ASTNameCallNode* node) = 0;
+    virtual Value* evaluate(ASTFindCallNode* node) = 0;
+    virtual Value* evaluate(ASTFunctionCallNode* node) = 0;
+    virtual Value* evaluate(ASTNestedCallNode* node) = 0;
+    virtual Value* evaluate(ASTForNode* node) = 0;
+    virtual Value* evaluate(ASTIfNode* node) = 0;
+    virtual Value* evaluate(ASTFunctionIdentifierNode* node) = 0;
+    virtual Value* evaluate(ASTFunctionNode* node) = 0;
+    virtual Value* evaluate(ASTNestedIdentifierNode* node) = 0;
+    virtual Value* evaluate(ASTNestedFunctionNode* node) = 0;
+    virtual Value* evaluate(ASTInvokeNestedNode* node) = 0;
 
 protected:
     std::vector<AutoMapper> m_automappers;
@@ -467,10 +467,10 @@ protected:
 */
 class ASTNullNode final : public IASTNode {
 public:
-    ASTNullNode(const ASTNullNode&)            = delete;
+    ASTNullNode(const ASTNullNode&) = delete;
     ASTNullNode& operator=(const ASTNullNode&) = delete;
 
-    ASTNullNode(ASTNullNode&&)            = default;
+    ASTNullNode(ASTNullNode&&) = default;
     ASTNullNode& operator=(ASTNullNode&&) = default;
 
     ASTNullNode() = default;
@@ -498,10 +498,10 @@ public:
 
 class ASTBoolNode final : public IASTNode {
 public:
-    ASTBoolNode(const ASTBoolNode&)            = delete;
+    ASTBoolNode(const ASTBoolNode&) = delete;
     ASTBoolNode& operator=(const ASTBoolNode&) = delete;
 
-    ASTBoolNode(ASTBoolNode&&)            = default;
+    ASTBoolNode(ASTBoolNode&&) = default;
     ASTBoolNode& operator=(ASTBoolNode&&) = default;
 
     ASTBoolNode() = default;
@@ -542,10 +542,10 @@ private:
 
 class ASTIntNode final : public IASTNode {
 public:
-    ASTIntNode(const ASTIntNode&)            = delete;
+    ASTIntNode(const ASTIntNode&) = delete;
     ASTIntNode& operator=(const ASTIntNode&) = delete;
 
-    ASTIntNode(ASTIntNode&&)            = default;
+    ASTIntNode(ASTIntNode&&) = default;
     ASTIntNode& operator=(ASTIntNode&&) = default;
 
     ASTIntNode() = default;
@@ -586,10 +586,10 @@ private:
 
 class ASTRangeNode final : public IASTNode {
 public:
-    ASTRangeNode(const ASTRangeNode&)            = delete;
+    ASTRangeNode(const ASTRangeNode&) = delete;
     ASTRangeNode& operator=(const ASTRangeNode&) = delete;
 
-    ASTRangeNode(ASTRangeNode&&)            = default;
+    ASTRangeNode(ASTRangeNode&&) = default;
     ASTRangeNode& operator=(ASTRangeNode&&) = default;
 
     ASTRangeNode() = default;
@@ -630,10 +630,10 @@ private:
 
 class ASTCoordNode final : public IASTNode {
 public:
-    ASTCoordNode(const ASTCoordNode&)            = delete;
+    ASTCoordNode(const ASTCoordNode&) = delete;
     ASTCoordNode& operator=(const ASTCoordNode&) = delete;
 
-    ASTCoordNode(ASTCoordNode&&)            = default;
+    ASTCoordNode(ASTCoordNode&&) = default;
     ASTCoordNode& operator=(ASTCoordNode&&) = default;
 
     ASTCoordNode() = default;
@@ -674,10 +674,10 @@ private:
 
 class ASTFloatNode final : public IASTNode {
 public:
-    ASTFloatNode(const ASTFloatNode&)            = delete;
+    ASTFloatNode(const ASTFloatNode&) = delete;
     ASTFloatNode& operator=(const ASTFloatNode&) = delete;
 
-    ASTFloatNode(ASTFloatNode&&)            = default;
+    ASTFloatNode(ASTFloatNode&&) = default;
     ASTFloatNode& operator=(ASTFloatNode&&) = default;
 
     ASTFloatNode() = default;
@@ -718,10 +718,10 @@ private:
 
 class ASTStringNode final : public IASTNode {
 public:
-    ASTStringNode(const ASTStringNode&)            = delete;
+    ASTStringNode(const ASTStringNode&) = delete;
     ASTStringNode& operator=(const ASTStringNode&) = delete;
 
-    ASTStringNode(ASTStringNode&&)            = default;
+    ASTStringNode(ASTStringNode&&) = default;
     ASTStringNode& operator=(ASTStringNode&&) = default;
 
     ASTStringNode() = default;
@@ -762,10 +762,10 @@ private:
 
 class ASTObjectNode final : public IASTNode {
 public:
-    ASTObjectNode(const ASTObjectNode&)            = delete;
+    ASTObjectNode(const ASTObjectNode&) = delete;
     ASTObjectNode& operator=(const ASTObjectNode&) = delete;
 
-    ASTObjectNode(ASTObjectNode&&)            = default;
+    ASTObjectNode(ASTObjectNode&&) = default;
     ASTObjectNode& operator=(ASTObjectNode&&) = default;
 
     ASTObjectNode() = default;
@@ -807,10 +807,10 @@ private:
 template <typename T>
 class ASTArrayNode final : public IASTNode {
 public:
-    ASTArrayNode(const ASTArrayNode&)            = delete;
+    ASTArrayNode(const ASTArrayNode&) = delete;
     ASTArrayNode& operator=(const ASTArrayNode&) = delete;
 
-    ASTArrayNode(ASTArrayNode&&)            = default;
+    ASTArrayNode(ASTArrayNode&&) = default;
     ASTArrayNode& operator=(ASTArrayNode&&) = default;
 
     ASTArrayNode() = default;
@@ -853,10 +853,10 @@ private:
 
 class ASTDeclarationNode final : public IASTNode {
 public:
-    ASTDeclarationNode(const ASTDeclarationNode&)            = delete;
+    ASTDeclarationNode(const ASTDeclarationNode&) = delete;
     ASTDeclarationNode& operator=(const ASTDeclarationNode&) = delete;
 
-    ASTDeclarationNode(ASTDeclarationNode&&)            = default;
+    ASTDeclarationNode(ASTDeclarationNode&&) = default;
     ASTDeclarationNode& operator=(ASTDeclarationNode&&) = default;
 
     ASTDeclarationNode() = default;
@@ -910,10 +910,10 @@ private:
 
 class ASTIdentifierNode final : public IASTNode {
 public:
-    ASTIdentifierNode(const ASTIdentifierNode&)            = delete;
+    ASTIdentifierNode(const ASTIdentifierNode&) = delete;
     ASTIdentifierNode& operator=(const ASTIdentifierNode&) = delete;
 
-    ASTIdentifierNode(ASTIdentifierNode&&)            = default;
+    ASTIdentifierNode(ASTIdentifierNode&&) = default;
     ASTIdentifierNode& operator=(ASTIdentifierNode&&) = default;
 
     ASTIdentifierNode()
@@ -972,10 +972,10 @@ private:
 
 class ASTVariableNode final : public IASTNode {
 public:
-    ASTVariableNode(const ASTVariableNode&)            = delete;
+    ASTVariableNode(const ASTVariableNode&) = delete;
     ASTVariableNode& operator=(const ASTVariableNode&) = delete;
 
-    ASTVariableNode(ASTVariableNode&&)            = default;
+    ASTVariableNode(ASTVariableNode&&) = default;
     ASTVariableNode& operator=(ASTVariableNode&&) = default;
 
     ASTVariableNode()
@@ -1024,10 +1024,10 @@ private:
 
 class ASTAnchorNode final : public IASTNode {
 public:
-    ASTAnchorNode(const ASTAnchorNode&)            = delete;
+    ASTAnchorNode(const ASTAnchorNode&) = delete;
     ASTAnchorNode& operator=(const ASTAnchorNode&) = delete;
 
-    ASTAnchorNode(ASTAnchorNode&&)            = default;
+    ASTAnchorNode(ASTAnchorNode&&) = default;
     ASTAnchorNode& operator=(ASTAnchorNode&&) = default;
 
     ASTAnchorNode() = default;
@@ -1066,10 +1066,10 @@ private:
 
 class ASTCountNode final : public IASTNode {
 public:
-    ASTCountNode(const ASTCountNode&)            = delete;
+    ASTCountNode(const ASTCountNode&) = delete;
     ASTCountNode& operator=(const ASTCountNode&) = delete;
 
-    ASTCountNode(ASTCountNode&&)            = default;
+    ASTCountNode(ASTCountNode&&) = default;
     ASTCountNode& operator=(ASTCountNode&&) = default;
 
     ASTCountNode() = default;
@@ -1108,10 +1108,10 @@ private:
 
 class ASTLastNode final : public IASTNode {
 public:
-    ASTLastNode(const ASTLastNode&)            = delete;
+    ASTLastNode(const ASTLastNode&) = delete;
     ASTLastNode& operator=(const ASTLastNode&) = delete;
 
-    ASTLastNode(ASTLastNode&&)            = default;
+    ASTLastNode(ASTLastNode&&) = default;
     ASTLastNode& operator=(ASTLastNode&&) = default;
 
     ASTLastNode() = default;
@@ -1150,10 +1150,10 @@ private:
 
 class ASTXNode final : public IASTNode {
 public:
-    ASTXNode(const ASTXNode&)            = delete;
+    ASTXNode(const ASTXNode&) = delete;
     ASTXNode& operator=(const ASTXNode&) = delete;
 
-    ASTXNode(ASTXNode&&)            = default;
+    ASTXNode(ASTXNode&&) = default;
     ASTXNode& operator=(ASTXNode&&) = default;
 
     ASTXNode() = default;
@@ -1192,10 +1192,10 @@ private:
 
 class ASTYNode final : public IASTNode {
 public:
-    ASTYNode(const ASTYNode&)            = delete;
+    ASTYNode(const ASTYNode&) = delete;
     ASTYNode& operator=(const ASTYNode&) = delete;
 
-    ASTYNode(ASTYNode&&)            = default;
+    ASTYNode(ASTYNode&&) = default;
     ASTYNode& operator=(ASTYNode&&) = default;
 
     ASTYNode() = default;
@@ -1234,10 +1234,10 @@ private:
 
 class ASTRotationNode final : public IASTNode {
 public:
-    ASTRotationNode(const ASTRotationNode&)            = delete;
+    ASTRotationNode(const ASTRotationNode&) = delete;
     ASTRotationNode& operator=(const ASTRotationNode&) = delete;
 
-    ASTRotationNode(ASTRotationNode&&)            = default;
+    ASTRotationNode(ASTRotationNode&&) = default;
     ASTRotationNode& operator=(ASTRotationNode&&) = default;
 
     ASTRotationNode()
@@ -1287,10 +1287,10 @@ private:
 
 class ASTEmptyNode final : public IASTNode {
 public:
-    ASTEmptyNode(const ASTEmptyNode&)            = delete;
+    ASTEmptyNode(const ASTEmptyNode&) = delete;
     ASTEmptyNode& operator=(const ASTEmptyNode&) = delete;
 
-    ASTEmptyNode(ASTEmptyNode&&)            = default;
+    ASTEmptyNode(ASTEmptyNode&&) = default;
     ASTEmptyNode& operator=(ASTEmptyNode&&) = default;
 
     ASTEmptyNode() = default;
@@ -1314,10 +1314,10 @@ public:
 
 class ASTFullNode final : public IASTNode {
 public:
-    ASTFullNode(const ASTFullNode&)            = delete;
+    ASTFullNode(const ASTFullNode&) = delete;
     ASTFullNode& operator=(const ASTFullNode&) = delete;
 
-    ASTFullNode(ASTFullNode&&)            = default;
+    ASTFullNode(ASTFullNode&&) = default;
     ASTFullNode& operator=(ASTFullNode&&) = default;
 
     ASTFullNode() = default;
@@ -1341,10 +1341,10 @@ public:
 
 class ASTIndexNode final : public IASTNode {
 public:
-    ASTIndexNode(const ASTIndexNode&)            = delete;
+    ASTIndexNode(const ASTIndexNode&) = delete;
     ASTIndexNode& operator=(const ASTIndexNode&) = delete;
 
-    ASTIndexNode(ASTIndexNode&&)            = default;
+    ASTIndexNode(ASTIndexNode&&) = default;
     ASTIndexNode& operator=(ASTIndexNode&&) = default;
 
     ASTIndexNode() = default;
@@ -1370,10 +1370,10 @@ public:
 
 class ASTNotIndexNode final : public IASTNode {
 public:
-    ASTNotIndexNode(const ASTNotIndexNode&)            = delete;
+    ASTNotIndexNode(const ASTNotIndexNode&) = delete;
     ASTNotIndexNode& operator=(const ASTNotIndexNode&) = delete;
 
-    ASTNotIndexNode(ASTNotIndexNode&&)            = default;
+    ASTNotIndexNode(ASTNotIndexNode&&) = default;
     ASTNotIndexNode& operator=(ASTNotIndexNode&&) = default;
 
     ASTNotIndexNode() = default;
@@ -1397,10 +1397,10 @@ public:
 
 class ASTInsertNode final : public IASTNode {
 public:
-    ASTInsertNode(const ASTInsertNode&)            = delete;
+    ASTInsertNode(const ASTInsertNode&) = delete;
     ASTInsertNode& operator=(const ASTInsertNode&) = delete;
 
-    ASTInsertNode(ASTInsertNode&&)            = default;
+    ASTInsertNode(ASTInsertNode&&) = default;
     ASTInsertNode& operator=(ASTInsertNode&&) = default;
 
     ASTInsertNode()
@@ -1450,10 +1450,10 @@ private:
 
 class ASTRotateNode final : public IASTNode {
 public:
-    ASTRotateNode(const ASTRotateNode&)            = delete;
+    ASTRotateNode(const ASTRotateNode&) = delete;
     ASTRotateNode& operator=(const ASTRotateNode&) = delete;
 
-    ASTRotateNode(ASTRotateNode&&)            = default;
+    ASTRotateNode(ASTRotateNode&&) = default;
     ASTRotateNode& operator=(ASTRotateNode&&) = default;
 
     ASTRotateNode()
@@ -1504,10 +1504,10 @@ private:
 
 class ASTOpAssignNode final : public IASTNode {
 public:
-    ASTOpAssignNode(const ASTOpAssignNode&)            = delete;
+    ASTOpAssignNode(const ASTOpAssignNode&) = delete;
     ASTOpAssignNode& operator=(const ASTOpAssignNode&) = delete;
 
-    ASTOpAssignNode(ASTOpAssignNode&&)            = default;
+    ASTOpAssignNode(ASTOpAssignNode&&) = default;
     ASTOpAssignNode& operator=(ASTOpAssignNode&&) = default;
 
     ASTOpAssignNode() = default;
@@ -1565,10 +1565,10 @@ private:
 
 class ASTOpAddNode final : public IASTNode {
 public:
-    ASTOpAddNode(const ASTOpAddNode&)            = delete;
+    ASTOpAddNode(const ASTOpAddNode&) = delete;
     ASTOpAddNode& operator=(const ASTOpAddNode&) = delete;
 
-    ASTOpAddNode(ASTOpAddNode&&)            = default;
+    ASTOpAddNode(ASTOpAddNode&&) = default;
     ASTOpAddNode& operator=(ASTOpAddNode&&) = default;
 
     ASTOpAddNode() = default;
@@ -1626,10 +1626,10 @@ private:
 
 class ASTOpSubtractNode final : public IASTNode {
 public:
-    ASTOpSubtractNode(const ASTOpSubtractNode&)            = delete;
+    ASTOpSubtractNode(const ASTOpSubtractNode&) = delete;
     ASTOpSubtractNode& operator=(const ASTOpSubtractNode&) = delete;
 
-    ASTOpSubtractNode(ASTOpSubtractNode&&)            = default;
+    ASTOpSubtractNode(ASTOpSubtractNode&&) = default;
     ASTOpSubtractNode& operator=(ASTOpSubtractNode&&) = default;
 
     ASTOpSubtractNode() = default;
@@ -1687,10 +1687,10 @@ private:
 
 class ASTOpMultiplyNode final : public IASTNode {
 public:
-    ASTOpMultiplyNode(const ASTOpMultiplyNode&)            = delete;
+    ASTOpMultiplyNode(const ASTOpMultiplyNode&) = delete;
     ASTOpMultiplyNode& operator=(const ASTOpMultiplyNode&) = delete;
 
-    ASTOpMultiplyNode(ASTOpMultiplyNode&&)            = default;
+    ASTOpMultiplyNode(ASTOpMultiplyNode&&) = default;
     ASTOpMultiplyNode& operator=(ASTOpMultiplyNode&&) = default;
 
     ASTOpMultiplyNode() = default;
@@ -1748,10 +1748,10 @@ private:
 
 class ASTOpDivideNode final : public IASTNode {
 public:
-    ASTOpDivideNode(const ASTOpDivideNode&)            = delete;
+    ASTOpDivideNode(const ASTOpDivideNode&) = delete;
     ASTOpDivideNode& operator=(const ASTOpDivideNode&) = delete;
 
-    ASTOpDivideNode(ASTOpDivideNode&&)            = default;
+    ASTOpDivideNode(ASTOpDivideNode&&) = default;
     ASTOpDivideNode& operator=(ASTOpDivideNode&&) = default;
 
     ASTOpDivideNode() = default;
@@ -1809,10 +1809,10 @@ private:
 
 class ASTOpEqualNode final : public IASTNode {
 public:
-    ASTOpEqualNode(const ASTOpEqualNode&)            = delete;
+    ASTOpEqualNode(const ASTOpEqualNode&) = delete;
     ASTOpEqualNode& operator=(const ASTOpEqualNode&) = delete;
 
-    ASTOpEqualNode(ASTOpEqualNode&&)            = default;
+    ASTOpEqualNode(ASTOpEqualNode&&) = default;
     ASTOpEqualNode& operator=(ASTOpEqualNode&&) = default;
 
     ASTOpEqualNode() = default;
@@ -1870,10 +1870,10 @@ private:
 
 class ASTOpNotEqualNode final : public IASTNode {
 public:
-    ASTOpNotEqualNode(const ASTOpNotEqualNode&)            = delete;
+    ASTOpNotEqualNode(const ASTOpNotEqualNode&) = delete;
     ASTOpNotEqualNode& operator=(const ASTOpNotEqualNode&) = delete;
 
-    ASTOpNotEqualNode(ASTOpNotEqualNode&&)            = default;
+    ASTOpNotEqualNode(ASTOpNotEqualNode&&) = default;
     ASTOpNotEqualNode& operator=(ASTOpNotEqualNode&&) = default;
 
     ASTOpNotEqualNode() = default;
@@ -1931,10 +1931,10 @@ private:
 
 class ASTOpGreaterThanNode final : public IASTNode {
 public:
-    ASTOpGreaterThanNode(const ASTOpGreaterThanNode&)            = delete;
+    ASTOpGreaterThanNode(const ASTOpGreaterThanNode&) = delete;
     ASTOpGreaterThanNode& operator=(const ASTOpGreaterThanNode&) = delete;
 
-    ASTOpGreaterThanNode(ASTOpGreaterThanNode&&)            = default;
+    ASTOpGreaterThanNode(ASTOpGreaterThanNode&&) = default;
     ASTOpGreaterThanNode& operator=(ASTOpGreaterThanNode&&) = default;
 
     ASTOpGreaterThanNode() = default;
@@ -1992,10 +1992,10 @@ private:
 
 class ASTOpGreaterThanOrEqualNode final : public IASTNode {
 public:
-    ASTOpGreaterThanOrEqualNode(const ASTOpGreaterThanOrEqualNode&)            = delete;
+    ASTOpGreaterThanOrEqualNode(const ASTOpGreaterThanOrEqualNode&) = delete;
     ASTOpGreaterThanOrEqualNode& operator=(const ASTOpGreaterThanOrEqualNode&) = delete;
 
-    ASTOpGreaterThanOrEqualNode(ASTOpGreaterThanOrEqualNode&&)            = default;
+    ASTOpGreaterThanOrEqualNode(ASTOpGreaterThanOrEqualNode&&) = default;
     ASTOpGreaterThanOrEqualNode& operator=(ASTOpGreaterThanOrEqualNode&&) = default;
 
     ASTOpGreaterThanOrEqualNode() = default;
@@ -2053,10 +2053,10 @@ private:
 
 class ASTOpLessThanNode final : public IASTNode {
 public:
-    ASTOpLessThanNode(const ASTOpLessThanNode&)            = delete;
+    ASTOpLessThanNode(const ASTOpLessThanNode&) = delete;
     ASTOpLessThanNode& operator=(const ASTOpLessThanNode&) = delete;
 
-    ASTOpLessThanNode(ASTOpLessThanNode&&)            = default;
+    ASTOpLessThanNode(ASTOpLessThanNode&&) = default;
     ASTOpLessThanNode& operator=(ASTOpLessThanNode&&) = default;
 
     ASTOpLessThanNode() = default;
@@ -2114,10 +2114,10 @@ private:
 
 class ASTOpLessThanOrEqualNode final : public IASTNode {
 public:
-    ASTOpLessThanOrEqualNode(const ASTOpLessThanOrEqualNode&)            = delete;
+    ASTOpLessThanOrEqualNode(const ASTOpLessThanOrEqualNode&) = delete;
     ASTOpLessThanOrEqualNode& operator=(const ASTOpLessThanOrEqualNode&) = delete;
 
-    ASTOpLessThanOrEqualNode(ASTOpLessThanOrEqualNode&&)            = default;
+    ASTOpLessThanOrEqualNode(ASTOpLessThanOrEqualNode&&) = default;
     ASTOpLessThanOrEqualNode& operator=(ASTOpLessThanOrEqualNode&&) = default;
 
     ASTOpLessThanOrEqualNode() = default;
@@ -2175,10 +2175,10 @@ private:
 
 class ASTOpAndNode final : public IASTNode {
 public:
-    ASTOpAndNode(const ASTOpAndNode&)            = delete;
+    ASTOpAndNode(const ASTOpAndNode&) = delete;
     ASTOpAndNode& operator=(const ASTOpAndNode&) = delete;
 
-    ASTOpAndNode(ASTOpAndNode&&)            = default;
+    ASTOpAndNode(ASTOpAndNode&&) = default;
     ASTOpAndNode& operator=(ASTOpAndNode&&) = default;
 
     ASTOpAndNode() = default;
@@ -2236,10 +2236,10 @@ private:
 
 class ASTOpOrNode final : public IASTNode {
 public:
-    ASTOpOrNode(const ASTOpOrNode&)            = delete;
+    ASTOpOrNode(const ASTOpOrNode&) = delete;
     ASTOpOrNode& operator=(const ASTOpOrNode&) = delete;
 
-    ASTOpOrNode(ASTOpOrNode&&)            = default;
+    ASTOpOrNode(ASTOpOrNode&&) = default;
     ASTOpOrNode& operator=(ASTOpOrNode&&) = default;
 
     ASTOpOrNode() = default;
@@ -2297,10 +2297,10 @@ private:
 
 class ASTOpNotNode final : public IASTNode {
 public:
-    ASTOpNotNode(const ASTOpNotNode&)            = delete;
+    ASTOpNotNode(const ASTOpNotNode&) = delete;
     ASTOpNotNode& operator=(const ASTOpNotNode&) = delete;
 
-    ASTOpNotNode(ASTOpNotNode&&)            = default;
+    ASTOpNotNode(ASTOpNotNode&&) = default;
     ASTOpNotNode& operator=(ASTOpNotNode&&) = default;
 
     ASTOpNotNode() = default;
@@ -2345,10 +2345,10 @@ private:
 
 class ASTOpRangeNode final : public IASTNode {
 public:
-    ASTOpRangeNode(const ASTOpRangeNode&)            = delete;
+    ASTOpRangeNode(const ASTOpRangeNode&) = delete;
     ASTOpRangeNode& operator=(const ASTOpRangeNode&) = delete;
 
-    ASTOpRangeNode(ASTOpRangeNode&&)            = default;
+    ASTOpRangeNode(ASTOpRangeNode&&) = default;
     ASTOpRangeNode& operator=(ASTOpRangeNode&&) = default;
 
     ASTOpRangeNode() = default;
@@ -2406,10 +2406,10 @@ private:
 
 class ASTOpCoordNode final : public IASTNode {
 public:
-    ASTOpCoordNode(const ASTOpCoordNode&)            = delete;
+    ASTOpCoordNode(const ASTOpCoordNode&) = delete;
     ASTOpCoordNode& operator=(const ASTOpCoordNode&) = delete;
 
-    ASTOpCoordNode(ASTOpCoordNode&&)            = default;
+    ASTOpCoordNode(ASTOpCoordNode&&) = default;
     ASTOpCoordNode& operator=(ASTOpCoordNode&&) = default;
 
     ASTOpCoordNode() = default;
@@ -2467,10 +2467,10 @@ private:
 
 class ASTErrorNode final : public IASTNode {
 public:
-    ASTErrorNode(const ASTErrorNode&)            = delete;
+    ASTErrorNode(const ASTErrorNode&) = delete;
     ASTErrorNode& operator=(const ASTErrorNode&) = delete;
 
-    ASTErrorNode(ASTErrorNode&&)            = default;
+    ASTErrorNode(ASTErrorNode&&) = default;
     ASTErrorNode& operator=(ASTErrorNode&&) = default;
 
     ASTErrorNode() = default;
@@ -2507,10 +2507,10 @@ private:
 
 class ASTWarningNode final : public IASTNode {
 public:
-    ASTWarningNode(const ASTWarningNode&)            = delete;
+    ASTWarningNode(const ASTWarningNode&) = delete;
     ASTWarningNode& operator=(const ASTWarningNode&) = delete;
 
-    ASTWarningNode(ASTWarningNode&&)            = default;
+    ASTWarningNode(ASTWarningNode&&) = default;
     ASTWarningNode& operator=(ASTWarningNode&&) = default;
 
     ASTWarningNode() = default;
@@ -2547,10 +2547,10 @@ private:
 
 class ASTAssertNode final : public IASTNode {
 public:
-    ASTAssertNode(const ASTAssertNode&)            = delete;
+    ASTAssertNode(const ASTAssertNode&) = delete;
     ASTAssertNode& operator=(const ASTAssertNode&) = delete;
 
-    ASTAssertNode(ASTAssertNode&&)            = default;
+    ASTAssertNode(ASTAssertNode&&) = default;
     ASTAssertNode& operator=(ASTAssertNode&&) = default;
 
     ASTAssertNode() = default;
@@ -2591,10 +2591,10 @@ private:
 
 class ASTReturnNode final : public IASTNode {
 public:
-    ASTReturnNode(const ASTReturnNode&)            = delete;
+    ASTReturnNode(const ASTReturnNode&) = delete;
     ASTReturnNode& operator=(const ASTReturnNode&) = delete;
 
-    ASTReturnNode(ASTReturnNode&&)            = default;
+    ASTReturnNode(ASTReturnNode&&) = default;
     ASTReturnNode& operator=(ASTReturnNode&&) = default;
 
     ASTReturnNode()
@@ -2646,10 +2646,10 @@ private:
 
 class ASTBreakNode final : public IASTNode {
 public:
-    ASTBreakNode(const ASTBreakNode&)            = delete;
+    ASTBreakNode(const ASTBreakNode&) = delete;
     ASTBreakNode& operator=(const ASTBreakNode&) = delete;
 
-    ASTBreakNode(ASTBreakNode&&)            = default;
+    ASTBreakNode(ASTBreakNode&&) = default;
     ASTBreakNode& operator=(ASTBreakNode&&) = default;
 
     ASTBreakNode() = default;
@@ -2673,10 +2673,10 @@ public:
 
 class ASTContinueNode final : public IASTNode {
 public:
-    ASTContinueNode(const ASTContinueNode&)            = delete;
+    ASTContinueNode(const ASTContinueNode&) = delete;
     ASTContinueNode& operator=(const ASTContinueNode&) = delete;
 
-    ASTContinueNode(ASTContinueNode&&)            = default;
+    ASTContinueNode(ASTContinueNode&&) = default;
     ASTContinueNode& operator=(ASTContinueNode&&) = default;
 
     ASTContinueNode() = default;
@@ -2700,10 +2700,10 @@ public:
 
 class ASTForRangeNode final : public IASTNode {
 public:
-    ASTForRangeNode(const ASTForRangeNode&)            = delete;
+    ASTForRangeNode(const ASTForRangeNode&) = delete;
     ASTForRangeNode& operator=(const ASTForRangeNode&) = delete;
 
-    ASTForRangeNode(ASTForRangeNode&&)            = default;
+    ASTForRangeNode(ASTForRangeNode&&) = default;
     ASTForRangeNode& operator=(ASTForRangeNode&&) = default;
 
     ASTForRangeNode() = default;
@@ -2751,10 +2751,10 @@ private:
 
 class ASTArraySubscriptNode final : public IASTNode {
 public:
-    ASTArraySubscriptNode(const ASTArraySubscriptNode&)            = delete;
+    ASTArraySubscriptNode(const ASTArraySubscriptNode&) = delete;
     ASTArraySubscriptNode& operator=(const ASTArraySubscriptNode&) = delete;
 
-    ASTArraySubscriptNode(ASTArraySubscriptNode&&)            = default;
+    ASTArraySubscriptNode(ASTArraySubscriptNode&&) = default;
     ASTArraySubscriptNode& operator=(ASTArraySubscriptNode&&) = default;
 
     ASTArraySubscriptNode() = default;
@@ -2811,10 +2811,10 @@ private:
 
 class ASTPushCallNode final : public IASTNode {
 public:
-    ASTPushCallNode(const ASTPushCallNode&)            = delete;
+    ASTPushCallNode(const ASTPushCallNode&) = delete;
     ASTPushCallNode& operator=(const ASTPushCallNode&) = delete;
 
-    ASTPushCallNode(ASTPushCallNode&&)            = default;
+    ASTPushCallNode(ASTPushCallNode&&) = default;
     ASTPushCallNode& operator=(ASTPushCallNode&&) = default;
 
     ASTPushCallNode() = default;
@@ -2862,10 +2862,10 @@ private:
 
 class ASTHasCallNode final : public IASTNode {
 public:
-    ASTHasCallNode(const ASTHasCallNode&)            = delete;
+    ASTHasCallNode(const ASTHasCallNode&) = delete;
     ASTHasCallNode& operator=(const ASTHasCallNode&) = delete;
 
-    ASTHasCallNode(ASTHasCallNode&&)            = default;
+    ASTHasCallNode(ASTHasCallNode&&) = default;
     ASTHasCallNode& operator=(ASTHasCallNode&&) = default;
 
     ASTHasCallNode() = default;
@@ -2913,10 +2913,10 @@ private:
 
 class ASTUniqueCallNode final : public IASTNode {
 public:
-    ASTUniqueCallNode(const ASTUniqueCallNode&)            = delete;
+    ASTUniqueCallNode(const ASTUniqueCallNode&) = delete;
     ASTUniqueCallNode& operator=(const ASTUniqueCallNode&) = delete;
 
-    ASTUniqueCallNode(ASTUniqueCallNode&&)            = default;
+    ASTUniqueCallNode(ASTUniqueCallNode&&) = default;
     ASTUniqueCallNode& operator=(ASTUniqueCallNode&&) = default;
 
     ASTUniqueCallNode() = default;
@@ -2964,10 +2964,10 @@ private:
 
 class ASTStrCallNode final : public IASTNode {
 public:
-    ASTStrCallNode(const ASTStrCallNode&)            = delete;
+    ASTStrCallNode(const ASTStrCallNode&) = delete;
     ASTStrCallNode& operator=(const ASTStrCallNode&) = delete;
 
-    ASTStrCallNode(ASTStrCallNode&&)            = default;
+    ASTStrCallNode(ASTStrCallNode&&) = default;
     ASTStrCallNode& operator=(ASTStrCallNode&&) = default;
 
     ASTStrCallNode() = default;
@@ -3015,10 +3015,10 @@ private:
 
 class ASTNameCallNode final : public IASTNode {
 public:
-    ASTNameCallNode(const ASTNameCallNode&)            = delete;
+    ASTNameCallNode(const ASTNameCallNode&) = delete;
     ASTNameCallNode& operator=(const ASTNameCallNode&) = delete;
 
-    ASTNameCallNode(ASTNameCallNode&&)            = default;
+    ASTNameCallNode(ASTNameCallNode&&) = default;
     ASTNameCallNode& operator=(ASTNameCallNode&&) = default;
 
     ASTNameCallNode() = default;
@@ -3066,10 +3066,10 @@ private:
 
 class ASTFindCallNode final : public IASTNode {
 public:
-    ASTFindCallNode(const ASTFindCallNode&)            = delete;
+    ASTFindCallNode(const ASTFindCallNode&) = delete;
     ASTFindCallNode& operator=(const ASTFindCallNode&) = delete;
 
-    ASTFindCallNode(ASTFindCallNode&&)            = default;
+    ASTFindCallNode(ASTFindCallNode&&) = default;
     ASTFindCallNode& operator=(ASTFindCallNode&&) = default;
 
     ASTFindCallNode() = default;
@@ -3117,10 +3117,10 @@ private:
 
 class ASTFunctionCallNode final : public IASTNode {
 public:
-    ASTFunctionCallNode(const ASTFunctionCallNode&)            = delete;
+    ASTFunctionCallNode(const ASTFunctionCallNode&) = delete;
     ASTFunctionCallNode& operator=(const ASTFunctionCallNode&) = delete;
 
-    ASTFunctionCallNode(ASTFunctionCallNode&&)            = default;
+    ASTFunctionCallNode(ASTFunctionCallNode&&) = default;
     ASTFunctionCallNode& operator=(ASTFunctionCallNode&&) = default;
 
     ASTFunctionCallNode()
@@ -3199,10 +3199,10 @@ private:
 
 class ASTNestedCallNode final : public IASTNode {
 public:
-    ASTNestedCallNode(const ASTNestedCallNode&)            = delete;
+    ASTNestedCallNode(const ASTNestedCallNode&) = delete;
     ASTNestedCallNode& operator=(const ASTNestedCallNode&) = delete;
 
-    ASTNestedCallNode(ASTNestedCallNode&&)            = default;
+    ASTNestedCallNode(ASTNestedCallNode&&) = default;
     ASTNestedCallNode& operator=(ASTNestedCallNode&&) = default;
 
     ASTNestedCallNode()
@@ -3281,10 +3281,10 @@ private:
 
 class ASTForNode final : public IASTNode {
 public:
-    ASTForNode(const ASTForNode&)            = delete;
+    ASTForNode(const ASTForNode&) = delete;
     ASTForNode& operator=(const ASTForNode&) = delete;
 
-    ASTForNode(ASTForNode&&)            = default;
+    ASTForNode(ASTForNode&&) = default;
     ASTForNode& operator=(ASTForNode&&) = default;
 
     ASTForNode() = default;
@@ -3333,10 +3333,10 @@ private:
 
 class ASTIfNode final : public IASTNode {
 public:
-    ASTIfNode(const ASTIfNode&)            = delete;
+    ASTIfNode(const ASTIfNode&) = delete;
     ASTIfNode& operator=(const ASTIfNode&) = delete;
 
-    ASTIfNode(ASTIfNode&&)            = default;
+    ASTIfNode(ASTIfNode&&) = default;
     ASTIfNode& operator=(ASTIfNode&&) = default;
 
     ASTIfNode() = default;
@@ -3385,10 +3385,10 @@ private:
 
 class ASTFunctionIdentifierNode final : public IASTNode {
 public:
-    ASTFunctionIdentifierNode(const ASTFunctionIdentifierNode&)            = delete;
+    ASTFunctionIdentifierNode(const ASTFunctionIdentifierNode&) = delete;
     ASTFunctionIdentifierNode& operator=(const ASTFunctionIdentifierNode&) = delete;
 
-    ASTFunctionIdentifierNode(ASTFunctionIdentifierNode&&)            = default;
+    ASTFunctionIdentifierNode(ASTFunctionIdentifierNode&&) = default;
     ASTFunctionIdentifierNode& operator=(ASTFunctionIdentifierNode&&) = default;
 
     ASTFunctionIdentifierNode()
@@ -3437,10 +3437,10 @@ private:
 
 class ASTFunctionNode final : public IASTNode {
 public:
-    ASTFunctionNode(const ASTFunctionNode&)            = delete;
+    ASTFunctionNode(const ASTFunctionNode&) = delete;
     ASTFunctionNode& operator=(const ASTFunctionNode&) = delete;
 
-    ASTFunctionNode(ASTFunctionNode&&)            = default;
+    ASTFunctionNode(ASTFunctionNode&&) = default;
     ASTFunctionNode& operator=(ASTFunctionNode&&) = default;
 
     ASTFunctionNode()
@@ -3541,10 +3541,10 @@ private:
 
 class ASTNestedIdentifierNode final : public IASTNode {
 public:
-    ASTNestedIdentifierNode(const ASTNestedIdentifierNode&)            = delete;
+    ASTNestedIdentifierNode(const ASTNestedIdentifierNode&) = delete;
     ASTNestedIdentifierNode& operator=(const ASTNestedIdentifierNode&) = delete;
 
-    ASTNestedIdentifierNode(ASTNestedIdentifierNode&&)            = default;
+    ASTNestedIdentifierNode(ASTNestedIdentifierNode&&) = default;
     ASTNestedIdentifierNode& operator=(ASTNestedIdentifierNode&&) = default;
 
     ASTNestedIdentifierNode()
@@ -3593,10 +3593,10 @@ private:
 
 class ASTNestedFunctionNode final : public IASTNode {
 public:
-    ASTNestedFunctionNode(const ASTNestedFunctionNode&)            = delete;
+    ASTNestedFunctionNode(const ASTNestedFunctionNode&) = delete;
     ASTNestedFunctionNode& operator=(const ASTNestedFunctionNode&) = delete;
 
-    ASTNestedFunctionNode(ASTNestedFunctionNode&&)            = default;
+    ASTNestedFunctionNode(ASTNestedFunctionNode&&) = default;
     ASTNestedFunctionNode& operator=(ASTNestedFunctionNode&&) = default;
 
     ASTNestedFunctionNode()
@@ -3694,10 +3694,10 @@ private:
 
 class ASTInvokeNestedNode final : public IASTNode {
 public:
-    ASTInvokeNestedNode(const ASTInvokeNestedNode&)            = delete;
+    ASTInvokeNestedNode(const ASTInvokeNestedNode&) = delete;
     ASTInvokeNestedNode& operator=(const ASTInvokeNestedNode&) = delete;
 
-    ASTInvokeNestedNode(ASTInvokeNestedNode&&)            = default;
+    ASTInvokeNestedNode(ASTInvokeNestedNode&&) = default;
     ASTInvokeNestedNode& operator=(ASTInvokeNestedNode&&) = default;
 
     ASTInvokeNestedNode()

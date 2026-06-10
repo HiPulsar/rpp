@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -78,7 +78,7 @@ void ObjectValue::update(bool sort) {
         value.erase(std::unique(value.begin(), value.end()), value.end());
     }
 
-    last.value  = static_cast<i32>(value.size()) - 1;
+    last.value = static_cast<i32>(value.size()) - 1;
     count.value = static_cast<i32>(value.size());
 
     for (auto& val : value)

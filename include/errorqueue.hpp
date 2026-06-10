@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -30,8 +30,8 @@
 
 class ErrorQueue {
 protected:
-    ErrorQueue()                             = default;
-    ErrorQueue(const ErrorQueue&)            = delete;
+    ErrorQueue() = default;
+    ErrorQueue(const ErrorQueue&) = delete;
     ErrorQueue& operator=(const ErrorQueue&) = delete;
 
 public:

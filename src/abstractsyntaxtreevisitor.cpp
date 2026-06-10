@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -20,6 +20,7 @@
 // IN THE SOFTWARE.
 //
 #include <abstractsyntaxtreevisitor.hpp>
+
 #include <abstractsyntaxtree.hpp>
 
 #include <algorithm>
@@ -192,10 +193,8 @@ void ASTNodeParser::parse(ASTInsertNode* node) {
     if (node->getNode() != nullptr) {
         node->getNode()->accept(*this);
         if (node->getControl() == InsertC::InsertRulePosType) {
-            if (node->getNode()->id() == NodeID::Empty
-                || node->getNode()->id() == NodeID::Full
-                || node->getNode()->id() == NodeID::Index
-                || node->getNode()->id() == NodeID::NotIndex) {} // valid
+            if (node->getNode()->id() == NodeID::Empty || node->getNode()->id() == NodeID::Full
+                || node->getNode()->id() == NodeID::Index || node->getNode()->id() == NodeID::NotIndex) {} // valid
             else
                 error = std::make_unique<ErrInvalidPosType>(node->getLine());
         }
@@ -462,9 +461,11 @@ void ASTNodeParser::parse(ASTReturnNode* node) {
     std::unique_ptr<Error> error;
     auto inside = node->findNode({ NodeID::Function, NodeID::NestedFunction }, {});
     if (inside->getNodeType() == ValueType::Null && node->getNode() == nullptr) {} // valid
-    else if ((node->getNode() != nullptr
-              && (inside->getNodeType() == node->getNode()->getNodeType()
-                  || Token::isConvertible(inside->getNodeType(), node->getNode()->getNodeType())))) {} // valid
+    else if (
+        (node->getNode() != nullptr
+         && (inside->getNodeType() == node->getNode()->getNodeType()
+             || Token::isConvertible(inside->getNodeType(), node->getNode()->getNodeType())))
+    ) {} // valid
     else {
         if (node->getNode() != nullptr)
             error = std::make_unique<ErrIncorrectValueType>(node->getNode()->getNodeType(), inside->getNodeType(), node->getLine());
@@ -897,10 +898,8 @@ void ASTNodeLinker::link(ASTRotationNode* node) {
     node->getNode()->accept(*this);
 
     std::unique_ptr<Error> error;
-    if (node->getNode()->getNodeType() != ValueType::Int
-        && node->getNode()->getNodeType() != ValueType::Range
-        && node->getNode()->getNodeType() != ValueType::Coord
-        && node->getNode()->getNodeType() != ValueType::Object)
+    if (node->getNode()->getNodeType() != ValueType::Int && node->getNode()->getNodeType() != ValueType::Range
+        && node->getNode()->getNodeType() != ValueType::Coord && node->getNode()->getNodeType() != ValueType::Object)
         error = std::make_unique<ErrNotAMemberOf>(Token::rotationToString(node->getRotation()), node->getNode()->getNodeType(), node->getLine());
 
     if (error != nullptr)
@@ -1230,7 +1229,8 @@ void ASTNodeLinker::link(ASTHasCallNode* node) {
     std::unique_ptr<Error> error;
     if ((node->getArguments().size() == 1
          && ((node->getVariable()->getNodeType() ^ ValueType::Array) == signature.getTypes().front()
-             || Token::isConvertible(node->getVariable()->getNodeType() ^ ValueType::Array, signature.getTypes().front())))) {} // valid
+             || Token::isConvertible(node->getVariable()->getNodeType() ^ ValueType::Array, signature.getTypes().front())))) {
+    } // valid
     else if (!Token::isArray(node->getVariable()->getNodeType()))
         error = std::make_unique<ErrNotAMemberOf>(std::string_view{ "has" }, node->getVariable()->getNodeType(), node->getLine());
     else
@@ -1464,12 +1464,13 @@ void ASTNodeLinker::link(ASTFunctionNode* node) {
                     arg->accept(*this);
             }
             else
-                error = std::make_unique<ErrRedeclaration>(
-                    *duplicate, node->getArguments()[std::distance(arguments.begin(), duplicate)]
-                                    ->as<ASTDeclarationNode*>()
-                                    ->getIdentifier()
-                                    ->getLine()
-                );
+                error = std::make_unique<
+                    ErrRedeclaration
+                >(*duplicate,
+                  node->getArguments()[std::distance(arguments.begin(), duplicate)]
+                      ->as<ASTDeclarationNode*>()
+                      ->getIdentifier()
+                      ->getLine());
         }
     }
 
@@ -1548,12 +1549,13 @@ void ASTNodeLinker::link(ASTNestedFunctionNode* node) {
                         arg->accept(*this);
                 }
                 else
-                    error = std::make_unique<ErrRedeclaration>(
-                        *duplicate, node->getArguments()[std::distance(arguments.begin(), duplicate)]
-                                        ->as<ASTDeclarationNode*>()
-                                        ->getIdentifier()
-                                        ->getLine()
-                    );
+                    error = std::make_unique<
+                        ErrRedeclaration
+                    >(*duplicate,
+                      node->getArguments()[std::distance(arguments.begin(), duplicate)]
+                          ->as<ASTDeclarationNode*>()
+                          ->getIdentifier()
+                          ->getLine());
             }
         }
     }
@@ -1765,7 +1767,7 @@ Value* ASTNodeEvaluator::evaluate([[maybe_unused]] ASTNotIndexNode* node) {
 
 Value* ASTNodeEvaluator::evaluate(ASTInsertNode* node) {
     _StackInit;
-    auto control   = node->getControl();
+    auto control = node->getControl();
     auto valueNode = node->getNode();
 
     if (valueNode != nullptr) {
@@ -1817,17 +1819,17 @@ Value* ASTNodeEvaluator::evaluate(ASTOpAssignNode* node) {
             left->as<BoolValue*>()->value = value->as<BoolValue*>()->value;
         }
         else if (left->type() == ValueType::Int) {
-            left->as<IntValue*>()->value    = value->as<IntValue*>()->value;
+            left->as<IntValue*>()->value = value->as<IntValue*>()->value;
             left->as<IntValue*>()->rotation = value->as<IntValue*>()->rotation;
         }
         else if (left->type() == ValueType::Range) {
-            left->as<RangeValue*>()->from     = value->as<RangeValue*>()->from;
-            left->as<RangeValue*>()->to       = value->as<RangeValue*>()->to;
+            left->as<RangeValue*>()->from = value->as<RangeValue*>()->from;
+            left->as<RangeValue*>()->to = value->as<RangeValue*>()->to;
             left->as<RangeValue*>()->rotation = value->as<RangeValue*>()->rotation;
         }
         else if (left->type() == ValueType::Coord) {
-            left->as<CoordValue*>()->x        = value->as<CoordValue*>()->x;
-            left->as<CoordValue*>()->y        = value->as<CoordValue*>()->y;
+            left->as<CoordValue*>()->x = value->as<CoordValue*>()->x;
+            left->as<CoordValue*>()->y = value->as<CoordValue*>()->y;
             left->as<CoordValue*>()->rotation = value->as<CoordValue*>()->rotation;
         }
         else if (left->type() == ValueType::Float) {
@@ -1837,11 +1839,11 @@ Value* ASTNodeEvaluator::evaluate(ASTOpAssignNode* node) {
             left->as<StringValue*>()->value = value->as<StringValue*>()->value;
         }
         else { // left->type() == ValueType::Object
-            left->as<ObjectValue*>()->value    = value->as<ObjectValue*>()->value;
+            left->as<ObjectValue*>()->value = value->as<ObjectValue*>()->value;
             left->as<ObjectValue*>()->rotation = value->as<ObjectValue*>()->rotation;
-            left->as<ObjectValue*>()->anchor   = value->as<ObjectValue*>()->anchor;
-            left->as<ObjectValue*>()->count    = value->as<ObjectValue*>()->count;
-            left->as<ObjectValue*>()->last     = value->as<ObjectValue*>()->last;
+            left->as<ObjectValue*>()->anchor = value->as<ObjectValue*>()->anchor;
+            left->as<ObjectValue*>()->count = value->as<ObjectValue*>()->count;
+            left->as<ObjectValue*>()->last = value->as<ObjectValue*>()->last;
         }
     }
     else {
@@ -1869,7 +1871,7 @@ Value* ASTNodeEvaluator::evaluate(ASTOpAddNode* node) {
     Value* right = node->getRight()->accept(*this);
     _BreakIfFailed;
 
-    auto leftType  = left->type();
+    auto leftType = left->type();
     auto rightType = right->type();
 
     _TryEvaluateNextNodeAndClearStack;
@@ -1900,7 +1902,7 @@ Value* ASTNodeEvaluator::evaluate(ASTOpSubtractNode* node) {
     Value* right = node->getRight()->accept(*this);
     _BreakIfFailed;
 
-    auto leftType  = left->type();
+    auto leftType = left->type();
     auto rightType = right->type();
 
     _TryEvaluateNextNodeAndClearStack;
@@ -1928,7 +1930,7 @@ Value* ASTNodeEvaluator::evaluate(ASTOpMultiplyNode* node) {
     Value* right = node->getRight()->accept(*this);
     _BreakIfFailed;
 
-    auto leftType  = left->type();
+    auto leftType = left->type();
     auto rightType = right->type();
 
     _TryEvaluateNextNodeAndClearStack;
@@ -1956,7 +1958,7 @@ Value* ASTNodeEvaluator::evaluate(ASTOpDivideNode* node) {
     Value* right = node->getRight()->accept(*this);
     _BreakIfFailed;
 
-    auto leftType  = left->type();
+    auto leftType = left->type();
     auto rightType = right->type();
 
     _TryEvaluateNextNodeAndClearStack;
@@ -1984,7 +1986,7 @@ Value* ASTNodeEvaluator::evaluate(ASTOpEqualNode* node) {
     Value* right = node->getRight()->accept(*this);
     _BreakIfFailed;
 
-    auto leftType  = left->type();
+    auto leftType = left->type();
     auto rightType = right->type();
 
     _TryEvaluateNextNodeAndClearStack;
@@ -2053,7 +2055,7 @@ Value* ASTNodeEvaluator::evaluate(ASTOpNotEqualNode* node) {
     Value* right = node->getRight()->accept(*this);
     _BreakIfFailed;
 
-    auto leftType  = left->type();
+    auto leftType = left->type();
     auto rightType = right->type();
 
     _TryEvaluateNextNodeAndClearStack;
@@ -2408,7 +2410,7 @@ Value* ASTNodeEvaluator::evaluate(ASTArraySubscriptNode* node) {
 
 Value* ASTNodeEvaluator::evaluate(ASTPushCallNode* node) {
     _StackInit;
-    auto identifier     = node->getVariable()->as<ASTVariableNode*>()->getIdentifier()->as<ASTIdentifierNode*>();
+    auto identifier = node->getVariable()->as<ASTVariableNode*>()->getIdentifier()->as<ASTIdentifierNode*>();
     auto tempIdentifier = std::make_unique<ASTIdentifierNode>();
     tempIdentifier->setType(identifier->getType());
     tempIdentifier->setValue(identifier->getValue()->makeNew());
@@ -2416,7 +2418,7 @@ Value* ASTNodeEvaluator::evaluate(ASTPushCallNode* node) {
     evaluateArgumentsVariadic(node->getArguments(), tempIdentifier.get());
     _BreakIfFailed;
 
-    auto value     = identifier->getValue();
+    auto value = identifier->getValue();
     ValueType type = value->type();
     if (type == ValueType::ArrayBool)
         value->as<ArrayValue<BoolValue>*>()->push(tempIdentifier->getValue()->as<ArrayValue<BoolValue>*>());
@@ -2504,7 +2506,7 @@ Value* ASTNodeEvaluator::evaluate(ASTNameCallNode* node) {
 
 Value* ASTNodeEvaluator::evaluate(ASTFindCallNode* node) {
     _StackInit;
-    auto identifier     = node->getVariable()->as<ASTVariableNode*>()->getIdentifier()->as<ASTIdentifierNode*>();
+    auto identifier = node->getVariable()->as<ASTVariableNode*>()->getIdentifier()->as<ASTIdentifierNode*>();
     auto tempIdentifier = std::make_unique<ASTIdentifierNode>();
     tempIdentifier->setType(identifier->getType());
     tempIdentifier->setValue(identifier->getValue()->makeNew());
@@ -2538,7 +2540,7 @@ Value* ASTNodeEvaluator::evaluate(ASTFindCallNode* node) {
 
 Value* ASTNodeEvaluator::evaluate(ASTFunctionCallNode* node) {
     _StackInit;
-    auto function       = node->getFunction()->as<ASTFunctionNode*>();
+    auto function = node->getFunction()->as<ASTFunctionNode*>();
     bool hasNestedCalls = !node->getNestedCalls().empty();
     if (hasNestedCalls)
         m_calls.push_back(node);
@@ -2558,7 +2560,7 @@ Value* ASTNodeEvaluator::evaluate(ASTFunctionCallNode* node) {
 
     Value* result = nullptr;
     if (function->getBranch()->hasNextNode()) {
-        result     = function->getBranch()->getNextNode()->accept(*this);
+        result = function->getBranch()->getNextNode()->accept(*this);
         m_returned = false;
         _BreakIfFailed;
     }
@@ -2589,7 +2591,7 @@ Value* ASTNodeEvaluator::evaluate(ASTNestedCallNode* node) {
 
     Value* result = nullptr;
     if (nested->getBranch()->hasNextNode()) {
-        result     = nested->getBranch()->getNextNode()->accept(*this);
+        result = nested->getBranch()->getNextNode()->accept(*this);
         m_returned = false;
         _BreakIfFailed;
     }
@@ -2603,9 +2605,9 @@ Value* ASTNodeEvaluator::evaluate(ASTForNode* node) {
     RangeValue* range = node->getRange()->accept(*this)->as<RangeValue*>();
     _BreakIfFailed;
     i32 from = range->from;
-    i32 to   = range->to;
+    i32 to = range->to;
 
-    Value* result  = nullptr;
+    Value* result = nullptr;
     bool increment = from <= to;
     for (i32 i = from; increment ? i <= to : i >= to;) {
         if (node->getBranch()->hasNextNode()) {
@@ -2618,14 +2620,15 @@ Value* ASTNodeEvaluator::evaluate(ASTForNode* node) {
                 break;
             }
         }
-        IntValue* forFrom = node->getRange()
-                                ->as<ASTForRangeNode*>()
-                                ->getDeclaration()
-                                ->as<ASTDeclarationNode*>()
-                                ->getIdentifier()
-                                ->as<ASTIdentifierNode*>()
-                                ->getValue()
-                                ->as<IntValue*>();
+        IntValue* forFrom =
+            node->getRange()
+                ->as<ASTForRangeNode*>()
+                ->getDeclaration()
+                ->as<ASTDeclarationNode*>()
+                ->getIdentifier()
+                ->as<ASTIdentifierNode*>()
+                ->getValue()
+                ->as<IntValue*>();
         increment ? ++forFrom->value : --forFrom->value;
         i = forFrom->value;
         _StackPop;
@@ -2902,7 +2905,7 @@ void ASTNodeEvaluator::insertPosType(u32 line, NodeID id) {
     else if (automappers().back().runs.back().rules.empty())
         printError("Cannot evaluate 'insert.rule.pos.type'. No rule found.", line);
     else if (automappers().back().runs.back().rules.back().posRules.empty())
-        printError("Cannot evaluate 'insert.rule.pos.type'. No posrule found.", line);
+        printError("Cannot evaluate 'insert.rule.pos.type'. No pos rule found.", line);
     else {
         if (id == NodeID::Index)
             automappers().back().runs.back().rules.back().posRules.back().ruleType = PosRuleType::INDEX;
@@ -2927,7 +2930,7 @@ void ASTNodeEvaluator::insert(InsertC control, Value* value, u32 line) {
         else if (automappers().empty())
             printError("Cannot evaluate 'insert.newrun'. No automapper found.", line);
         else {
-            Run run    = {};
+            Run run = {};
             run.copies = value->as<IntValue*>()->value;
             automappers().back().runs.push_back(std::move(run));
         }
@@ -2982,8 +2985,8 @@ void ASTNodeEvaluator::insert(InsertC control, Value* value, u32 line) {
         else {
             if (value->type() == ValueType::Coord) {
                 PosRule posRule = {};
-                posRule.x       = value->as<CoordValue*>()->x.value;
-                posRule.y       = value->as<CoordValue*>()->y.value;
+                posRule.x = value->as<CoordValue*>()->x.value;
+                posRule.y = value->as<CoordValue*>()->y.value;
                 automappers().back().runs.back().rules.back().posRules.push_back(std::move(posRule));
             }
             else
@@ -2998,17 +3001,17 @@ void ASTNodeEvaluator::insert(InsertC control, Value* value, u32 line) {
         else if (automappers().back().runs.back().rules.empty())
             printError("Cannot evaluate 'insert.rule.pos.index'. No rule found.", line);
         else if (automappers().back().runs.back().rules.back().posRules.empty())
-            printError("Cannot evaluate 'insert.rule.pos.index'. No posrule found.", line);
+            printError("Cannot evaluate 'insert.rule.pos.index'. No pos rule found.", line);
         else {
             IndexInfo ii;
             if (value->type() == ValueType::Int) {
-                ii.tileID   = value->as<IntValue*>()->value;
+                ii.tileID = value->as<IntValue*>()->value;
                 ii.rotation = value->as<IntValue*>()->rotation;
             }
             else {
                 ptr_value intValue = cast(value, ValueType::Int);
-                ii.tileID          = intValue->as<IntValue*>()->value;
-                ii.rotation        = intValue->as<IntValue*>()->rotation;
+                ii.tileID = intValue->as<IntValue*>()->value;
+                ii.rotation = intValue->as<IntValue*>()->rotation;
             }
 
             if (ii.tileID < -1 || ii.tileID > 255)
@@ -3025,7 +3028,7 @@ void ASTNodeEvaluator::insert(InsertC control, Value* value, u32 line) {
         else if (automappers().back().runs.back().rules.empty())
             printError("Cannot evaluate 'insert.rule.pos.operator'. No rule found.", line);
         else if (automappers().back().runs.back().rules.back().posRules.empty())
-            printError("Cannot evaluate 'insert.rule.pos.operator'. No posrule found.", line);
+            printError("Cannot evaluate 'insert.rule.pos.operator'. No pos rule found.", line);
         else {
             i32 op = value->as<IntValue*>()->value;
             if (op != util::enum_i32(Op::And) && op != util::enum_i32(Op::Or))
@@ -3042,10 +3045,50 @@ void ASTNodeEvaluator::insert(InsertC control, Value* value, u32 line) {
         else if (automappers().back().runs.back().rules.empty())
             printError("Cannot evaluate 'insert.rule.pos.group'. No rule found.", line);
         else if (automappers().back().runs.back().rules.back().posRules.empty())
-            printError("Cannot evaluate 'insert.rule.pos.group'. No posrule found.", line);
+            printError("Cannot evaluate 'insert.rule.pos.group'. No pos rule found.", line);
         else {
-            i32 group                                                       = value->as<IntValue*>()->value;
+            i32 group = value->as<IntValue*>()->value;
             automappers().back().runs.back().rules.back().posRules.back().group = group;
+        }
+    }
+    else if (control == InsertC::InsertRuleModulo) {
+        if (automappers().empty())
+            printError("Cannot evaluate 'insert.rule.modulo'. No automapper found.", line);
+        else if (automappers().back().runs.empty())
+            printError("Cannot evaluate 'insert.rule.modulo'. No run found.", line);
+        else if (automappers().back().runs.back().rules.empty())
+            printError("Cannot evaluate 'insert.rule.modulo'. No rule found.", line);
+        else {
+            if (value->type() == ValueType::Coord) {
+                ModuloRule moduloRule = {}; // TODO
+                moduloRule.mod_x = value->as<CoordValue*>()->x.value;
+                moduloRule.mod_y = value->as<CoordValue*>()->y.value;
+                automappers().back().runs.back().rules.back().moduloRules.push_back(std::move(moduloRule));
+            }
+            else
+                printError("Type '" + Token::typeToString(value->type()) + "' was assigned to 'insert.rule.modulo'. Use 'coord' type instead.", line);
+        }
+    }
+    else if (control == InsertC::InsertRuleModuloPos) {
+        if (automappers().empty())
+            printError("Cannot evaluate 'insert.rule.modulo.pos'. No automapper found.", line);
+        else if (automappers().back().runs.empty())
+            printError("Cannot evaluate 'insert.rule.modulo.pos'. No run found.", line);
+        else if (automappers().back().runs.back().rules.empty())
+            printError("Cannot evaluate 'insert.rule.modulo.pos'. No rule found.", line);
+        else if (automappers().back().runs.back().rules.back().moduloRules.empty())
+            printError("Cannot evaluate 'insert.rule.modulo.pos'. No modulo rule found.", line);
+        else {
+            if (value->type() == ValueType::Coord) {
+                i32 x = value->as<CoordValue*>()->x.value;
+                i32 y = value->as<CoordValue*>()->y.value;
+
+                ModuloRule& moduloRule = automappers().back().runs.back().rules.back().moduloRules.back();
+                moduloRule.offset_x = x;
+                moduloRule.offset_y = y;
+            }
+            else
+                printError("Type '" + Token::typeToString(value->type()) + "' was assigned to 'insert.rule.modulo.pos'. Use 'coord' type instead.", line);
         }
     }
     else {
@@ -3058,13 +3101,13 @@ void ASTNodeEvaluator::insert(InsertC control, Value* value, u32 line) {
         else {
             IndexInfo ii;
             if (value->type() == ValueType::Int) {
-                ii.tileID   = value->as<IntValue*>()->value;
+                ii.tileID = value->as<IntValue*>()->value;
                 ii.rotation = value->as<IntValue*>()->rotation;
             }
             else {
                 ptr_value intValue = cast(value, ValueType::Int);
-                ii.tileID          = intValue->as<IntValue*>()->value;
-                ii.rotation        = intValue->as<IntValue*>()->rotation;
+                ii.tileID = intValue->as<IntValue*>()->value;
+                ii.rotation = intValue->as<IntValue*>()->rotation;
             }
 
             if (ii.tileID < 0 || ii.tileID > 255)
@@ -3227,7 +3270,7 @@ IASTNode* ASTNullNode::getNodeByName(std::string_view name, NodeID id) {
         if (prev->id() == NodeID::For) {
             if (id == NodeID::Identifier) {
                 auto declaration = prev->as<ASTForNode*>()->getRange()->as<ASTForRangeNode*>()->getDeclaration();
-                auto node        = declaration->getNodeByName(name, id);
+                auto node = declaration->getNodeByName(name, id);
                 if (node != nullptr)
                     return node;
             }
@@ -3454,6 +3497,10 @@ ValueType ASTInsertNode::getNodeType() {
     if (getControl() == InsertC::InsertAutomapper)
         return ValueType::String;
     else if (getControl() == InsertC::InsertRulePos)
+        return ValueType::Coord;
+    else if (getControl() == InsertC::InsertRuleModulo)
+        return ValueType::Coord;
+    else if (getControl() == InsertC::InsertRuleModuloPos)
         return ValueType::Coord;
     else if (getControl() == InsertC::InsertRuleIndex)
         return ValueType::Int;
@@ -4097,7 +4144,7 @@ ValueType ASTFunctionIdentifierNode::getNodeType() {
 */
 bool ASTFunctionNode::isDeclared(std::string_view name, NodeID id, IASTNode* caller, const Signature& signature) const {
     if (id == NodeID::Function && this != caller) {
-        auto identifier     = static_cast<ASTFunctionIdentifierNode*>(getIdentifier());
+        auto identifier = static_cast<ASTFunctionIdentifierNode*>(getIdentifier());
         auto callerFunction = caller->as<ASTFunctionNode*>();
         if (identifier->getName() == name && getSignature()->isSame(signature))
             return true;
@@ -4238,7 +4285,7 @@ ValueType ASTNestedIdentifierNode::getNodeType() {
 */
 bool ASTNestedFunctionNode::isDeclared(std::string_view name, NodeID id, IASTNode* caller, const Signature& signature) const {
     if (id == NodeID::NestedFunction && this != caller) {
-        auto identifier         = static_cast<ASTNestedIdentifierNode*>(getIdentifier());
+        auto identifier = static_cast<ASTNestedIdentifierNode*>(getIdentifier());
         auto functionIdentifier = static_cast<ASTFunctionIdentifierNode*>(getFunctionIdentifier());
         auto callerFunctionIdentifier = caller->as<ASTNestedFunctionNode*>()->getFunctionIdentifier()->as<ASTFunctionIdentifierNode*>();
         if (identifier->getName() == name && functionIdentifier->getName() == callerFunctionIdentifier->getName())
@@ -4299,7 +4346,7 @@ IASTNode* ASTNestedFunctionNode::getNodeByName(std::string_view name, NodeID id)
 
 IASTNode* ASTNestedFunctionNode::getNodeBySignature(std::string_view name, NodeID id, const Signature& signature, std::string_view functionName) {
     if (id == NodeID::NestedFunction) {
-        auto identifier         = static_cast<ASTNestedIdentifierNode*>(getIdentifier());
+        auto identifier = static_cast<ASTNestedIdentifierNode*>(getIdentifier());
         auto functionIdentifier = static_cast<ASTFunctionIdentifierNode*>(getFunctionIdentifier());
         if (identifier->getName() == name && functionIdentifier->getName() == functionName && getSignature()->isSame(signature))
             return this;
@@ -4312,7 +4359,7 @@ IASTNode* ASTNestedFunctionNode::getNodeBySignature(std::string_view name, NodeI
 
 IASTNode* ASTNestedFunctionNode::getConvertibleNodeBySignature(std::string_view name, NodeID id, const Signature& signature, std::string_view functionName) {
     if (id == NodeID::NestedFunction) {
-        auto identifier         = static_cast<ASTNestedIdentifierNode*>(getIdentifier());
+        auto identifier = static_cast<ASTNestedIdentifierNode*>(getIdentifier());
         auto functionIdentifier = static_cast<ASTFunctionIdentifierNode*>(getFunctionIdentifier());
         if (identifier->getName() == name && functionIdentifier->getName() == functionName && getSignature()->isConvertible(signature))
             return this;
@@ -4327,7 +4374,7 @@ IASTNode* ASTNestedFunctionNode::getVariadicConvertibleNodeBySignature(std::stri
     if (id == NodeID::NestedFunction) {
         auto nestedSignature = getSignature();
         if (nestedSignature->getTypes().size() == 1 && Token::isArray(nestedSignature->getTypes().front())) {
-            auto identifier         = static_cast<ASTNestedIdentifierNode*>(getIdentifier());
+            auto identifier = static_cast<ASTNestedIdentifierNode*>(getIdentifier());
             auto functionIdentifier = static_cast<ASTFunctionIdentifierNode*>(getFunctionIdentifier());
             if (identifier->getName() == name && functionIdentifier->getName() == functionName && nestedSignature->isVariadicConvertible(signature))
                 return this;

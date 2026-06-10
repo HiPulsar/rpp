@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -32,11 +32,11 @@ class TokenH;
 
 class Token final {
 public:
-    Token()                        = default;
-    Token(const Token&)            = default;
-    Token(Token&&)                 = default;
+    Token() = default;
+    Token(const Token&) = default;
+    Token(Token&&) = default;
     Token& operator=(const Token&) = default;
-    Token& operator=(Token&&)      = default;
+    Token& operator=(Token&&) = default;
 
     Token(i32 cat, std::string_view value = {}, u32 line = {}, ValueType type = {})
         : value(value)

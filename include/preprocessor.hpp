@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -37,8 +37,8 @@ class Preprocessor final
     using iterator = std::vector<Token>::iterator;
 
 public:
-    Preprocessor()                               = delete;
-    Preprocessor(const Preprocessor&)            = delete;
+    Preprocessor() = delete;
+    Preprocessor(const Preprocessor&) = delete;
     Preprocessor& operator=(const Preprocessor&) = delete;
 
     Preprocessor(std::vector<Token>&& data)

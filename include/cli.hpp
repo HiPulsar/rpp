@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2020-2025 Aerll - aerlldev@gmail.com
+// Copyright (C) 2020-2026 HiPulsar - hipulsar@proton.me
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this softwareand associated documentation files(the "Software"), to deal
@@ -34,7 +34,7 @@ struct CLI {
     std::optional<isize> memory;
     std::vector<std::filesystem::path> includes;
     bool skipPreprocessor = false;
-    bool pause            = true;
+    bool pause = true;
 };
 
 #endif // RPP_CLI_HPP
